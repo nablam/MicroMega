@@ -1,52 +1,115 @@
+MegaSketch/*.rsuser
+MegaSketch/*.suo
+MegaSketch/*.user
+MegaSketch/*.userosscache
+MegaSketch/*.sln.docstates
+
+# User-specific files (MonoDevelop/Xamarin Studio)
+MegaSketch/*.userprefs
+
+
+MegaSketch/*.rsuser
+MegaSketch/*.suo
+MegaSketch/*.user
+MegaSketch/*.userosscache
+MegaSketch/*.sln.docstates
+
+# User-specific files (MonoDevelop/Xamarin Studio)
+MegaSketch/*.userprefs
+
+# Build results
+MegaSketch/[Dd]ebug/
+MegaSketch/[Dd]ebugPublic/
+MegaSketch/[Rr]elease/
+MegaSketch/[Rr]eleases/
+MegaSketch/x64/
+MegaSketch/x86/
+MegaSketch/[Ww][Ii][Nn]32/
+MegaSketch/[Aa][Rr][Mm]/
+MegaSketch/[Aa][Rr][Mm]64/
+MegaSketch/bld/
+MegaSketch/[Bb]in/
+MegaSketch/[Oo]bj/
+MegaSketch/[Ll]og/
+MegaSketch/[Ll]ogs/
+
+# Visual Studio 2015/2017 cache/options directory
+MegaSketch/.vs/
+
+# Files built by Visual Studio
+MegaSketch/*_i.c
+MegaSketch/*_p.c
+MegaSketch/*_h.h
+MegaSketch/*.ilk
+MegaSketch/*.meta
+MegaSketch/*.obj
+MegaSketch/*.iobj
+MegaSketch/*.pch
+MegaSketch/*.pdb
+MegaSketch/*.ipdb
+MegaSketch/*.pgc
+MegaSketch/*.pgd
+MegaSketch/*.rsp
+MegaSketch/*.sbr
+MegaSketch/*.tlb
+MegaSketch/*.tli
+MegaSketch/*.tlh
+MegaSketch/*.tmp
+MegaSketch/*.tmp_proj
+MegaSketch/*_wpftmp.csproj
+MegaSketch/*.log
+MegaSketch/*.vspscc
+MegaSketch/*.vssscc
+MegaSketch/.builds
+MegaSketch/*.pidb
+MegaSketch/*.svclog
+MegaSketch/*.scc
+
+# Visual C++ cache files
+MegaSketch/ipch/
+MegaSketch/*.aps
+MegaSketch/*.ncb
+MegaSketch/*.opendb
+MegaSketch/*.opensdf
+MegaSketch/*.sdf
+MegaSketch/*.cachefile
+MegaSketch/*.VC.db
+MegaSketch/*.VC.VC.opendb
+
+
+ Visual Studio code coverage results
+MegaSketch/*.coverage
+MegaSketch/*.coveragexml
+
 # Prerequisites
-*.d
+MegaSketch/*.d
 
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
-
-# Linker output
-*.ilk
-*.map
-*.exp
+# Compiled Object files
+MegaSketch/.slo
+MegaSketch/*.lo
+MegaSketch/*.o
+MegaSketch/*.obj
 
 # Precompiled Headers
-*.gch
-*.pch
+MegaSketch/*.gch
+MegaSketch/*.pch
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
+# Compiled Dynamic libraries
+MegaSketch/*.so
+MegaSketch/*.dylib
+MegaSketch/*.dll
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
+# Fortran module files
+MegaSketch/*.mod
+MegaSketch/*.smod
+
+# Compiled Static libraries
+MegaSketch/*.lai
+MegaSketch/*.la
+MegaSketch/*.a
+MegaSketch/*.lib
 
 # Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
-
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
-
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
+MegaSketch/*.exe
+MegaSketch/*.out
+MegaSketch/*.app
