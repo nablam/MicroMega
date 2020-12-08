@@ -6,9 +6,10 @@
 
 
 //Sample using LiquidCrystal library
+#include "mylcdbox.h"
 #include <Servo.h>
 #include <LiquidCrystal.h>
-
+#include "mylcdbox.h"
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
 
@@ -126,10 +127,18 @@ int deadzonefilter(int argval) {
     return argval;
     }
 
+
+
+
+LED_Controls LED1(LED_BUILTIN, 300);
+ 
+ 
+ 
  
 void loop(){
    
-
+    LED1.ON();
+    LED1.OFF();
     ReadPotpins();
    /* currentMillis = millis();
     if (currentMillis - previousMillis >= 10)  {  
