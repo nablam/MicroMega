@@ -50,121 +50,75 @@ unsigned long previousMillis;
 #pragma endregion
 
 
+#pragma region pots
+
+int potpin8 = 8;
+int potpin9 = 9;
+int potpin10 = 10;
+
+int potpin11 = 11;
+int potpin12 = 12;
+int potpin13 = 13;
+
+int pval8 =0; //valu of the potpin
+int pval9 = 0;
+int pval10 = 0;
+
+int pval11 = 0;
+int pval12 = 0;
+int pval13 = 0;
+#pragma endregion
+
 
 void setup()
     {
     Serial.begin(115200);
-    lcd.begin(16, 2);              // start the library
-    lcd.setCursor(0, 0);
-    lcd.print("RoboDogo V1.0");
-    
-    curDelay = DelaySpeed;
-    for (int i = 0; i < TotalServos; i++) {
-        ArraServos[i].attach(ArraServoPINS[i]);
-     }
-  
+    pinMode(potpin8, INPUT);
+    pinMode(potpin9, INPUT);
+    pinMode(potpin10, INPUT);
+    pinMode(potpin11, INPUT);
+    pinMode(potpin12, INPUT);
+    pinMode(potpin13, INPUT);
+    pinMode(A0, INPUT);
     }
 
+void ReadPotpins() {
+// left JS<----------------------
+// pval8 =analogRead(potpin8);//Rotationccw cw 7 -9-10-11 24
+pval8 = map(analogRead(potpin8),5,17 , 0, 128);
+ 
 
+ //pval9 =analogRead(potpin9); //downup  508+-4 amplitude 170
+ pval9 = map(analogRead(potpin9), 338, 678, 0, 1000);
+ 
 
-float filter(float ArgprevValue, float ArgcurrentValue, int filter) {
-    float lengthFiltered = (ArgprevValue + (ArgcurrentValue * filter)) / (filter + 1);
-    return lengthFiltered;
+ // pval10 =analogRead(potpin10);//rightleft  mid amplitude 170
+ pval10 = map(analogRead(potpin10),336  , 676 , 0, 1000);
+ 
+
+//rightJS-------------------------------->
+// pval11 =analogRead(potpin11);//   512 +-6 amplitude 172
+ pval11 = map(analogRead(potpin11), 336, 680, 0, 1000);
+ 
+
+//  pval12 =analogRead(potpin12); //  504 +-4 amplitude 172
+   pval12 = map(analogRead(potpin12),332  , 676 , 0, 1000);
+ 
+
+// pval13 =analogRead(potpin13);//rot  7-->  14-15-16  --->27
+   pval13 = map(analogRead(potpin13),8 , 21 , 0, 100); 
+ 
+
     }
-
-
-void TimedLoop() {
-    
+ 
+ 
+void loop(){
+   
     currentMillis = millis();
-    if (currentMillis - previousMillis >= 10) {  // start timed event
+    if (currentMillis - previousMillis >= 10)  {  
         previousMillis = currentMillis;
-        //Do the loop here
-         inputRate = Serial.parseFloat();
-        rate == map(inputRate, 0, 1023, 45, 135);
-        rate = inputRate;
-        if (state == 0) {
-            targetValue = 500;
-            if (currentValue <= targetValue) {
-                state = 1;
-                prevTargetValue = targetValue;
-                }
-            }
-        else if(state==1)
-            {
-            targetValue = 2300;
-            if (currentValue >= targetValue) {
-                state = 0;
-                prevTargetValue = targetValue;
-                }
-            }
-            
-        stepdiff = (targetValue - prevTargetValue) / (20 * rate);
-        currentValue = currentValue + stepdiff;
-        SetAllServosTo(currentValue);
-        Print4char0_1(currentValue);
-
-        Serial.print("cur val= "); Serial.println(currentValue);
-        Serial.print("inrate = "); Serial.println(inputRate);
-        Serial.print("  rate = "); Serial.println(rate);
-        Serial.print(" targV= "); Serial.println(targetValue);
-        Serial.print("");
-        }//Xtimed
-    }//Xloop
-
-void loop_servo0Sweep() {
-    for (int i = 0; i < TotalServos; i++) {
-
-        for (ArraServoPOSs[i] = 10; ArraServoPOSs[i] <= 100; ArraServoPOSs[i] += 1) {
-            ArraServos[i].write(ArraServoPOSs[i]);
-         }  
-        delay(curDelay);
-  
-    }
-
-    for (int i = 0; i < TotalServos; i++) {
-
-       
-        for (ArraServoPOSs[i] = 100; ArraServoPOSs[i] >= 10; ArraServoPOSs[i] -= 1) {
-            ArraServos[i].write(ArraServoPOSs[i]);
-            }
-            delay(curDelay);
+        
+        ReadPotpins();
+         
         }
 }
-
-int p = 1590;
-int oldvalue;
-int newvalue;
-void loop()
-    {
-
-    p = Serial.parseInt();
-
-  
-
-    if (p == 0) {
-        p = oldvalue;
-        }
-   /* else
-        {
-      
-        oldvalue = p;
-        }*/
-
-    currentMillis = millis();
-    if (currentMillis - previousMillis >= 1000) {  // start timed event
-        previousMillis = currentMillis;
-        //Do the loop here
- 
-       
-        if (p < 830)p = 830;
-        if (p > 2350)p = 2350;
-        SetAllServosTo(p);
-        oldvalue= p;
-        }
-
-   // TimedLoop();
-    /*loop_servo0Sweep();*/
-   // PrintOn9_1(posservo0);
-    }
-
-
