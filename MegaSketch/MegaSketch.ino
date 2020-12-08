@@ -52,6 +52,9 @@ unsigned long previousMillis;
 
 #pragma region pots
 
+#define PotReadScale 1000
+#define DeadZoneHalfAmplitude 16
+
 int potpin8 = 8;
 int potpin9 = 9;
 int potpin10 = 10;
@@ -89,20 +92,20 @@ pval8 = map(analogRead(potpin8),5,17 , 0, 128);
  
 
  //pval9 =analogRead(potpin9); //downup  508+-4 amplitude 170
- pval9 = map(analogRead(potpin9), 338, 678, 0, 1000);
+ pval9 = deadzonefilter(map(analogRead(potpin9), 338, 678, 0, PotReadScale));
  
 
  // pval10 =analogRead(potpin10);//rightleft  mid amplitude 170
- pval10 = map(analogRead(potpin10),336  , 676 , 0, 1000);
+ pval10 = deadzonefilter(map(analogRead(potpin10),336  , 676 , 0, PotReadScale));
  
 
 //rightJS-------------------------------->
 // pval11 =analogRead(potpin11);//   512 +-6 amplitude 172
- pval11 = map(analogRead(potpin11), 336, 680, 0, 1000);
+ pval11 = deadzonefilter(map(analogRead(potpin11), 330, 680, 0, PotReadScale));
  
 
-//  pval12 =analogRead(potpin12); //  504 +-4 amplitude 172
-   pval12 = map(analogRead(potpin12),332  , 676 , 0, 1000);
+//  pval12 =analogRead(potpin12); //
+   pval12 = deadzonefilter(map(analogRead(potpin12),330  , 680 , 0, PotReadScale));
  
 
 // pval13 =analogRead(potpin13);//rot  7-->  14-15-16  --->27
@@ -111,14 +114,28 @@ pval8 = map(analogRead(potpin8),5,17 , 0, 128);
 
     }
  
+int deadzonefilter(int argval) {
+
+
+    if ((argval > ((PotReadScale / 2) - DeadZoneHalfAmplitude)) && (argval < ((PotReadScale / 2) + DeadZoneHalfAmplitude)))
+        argval = (PotReadScale / 2) ;
+ 
+    if (argval < 0)argval = 0;
+    if (argval > PotReadScale)argval = PotReadScale;
+
+    return argval;
+    }
+
  
 void loop(){
    
-    currentMillis = millis();
+
+    ReadPotpins();
+   /* currentMillis = millis();
     if (currentMillis - previousMillis >= 10)  {  
         previousMillis = currentMillis;
         
         ReadPotpins();
          
-        }
+        }*/
 }
