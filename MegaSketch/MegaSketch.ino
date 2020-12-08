@@ -47,7 +47,7 @@ float stepdiff=0;
 #pragma region Timers
 unsigned long currentMillis;
 unsigned long previousMillis;
-
+#define KNEEACTANGLE 15.8L
 #pragma endregion
 
 

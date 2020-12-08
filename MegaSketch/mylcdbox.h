@@ -10,13 +10,13 @@
 #endif
 
 class LED_Controls {
-    public:
-    LED_Controls(int pin, int delay);
-    void ON();
-    void OFF();
-    int _pin;
-    int _delay;
-    };
+	public:
+	LED_Controls(int pin, int delay);
+	void ON();
+	void OFF();
+	int _pin;
+	int _delay;
+	};
 
 #endif
 

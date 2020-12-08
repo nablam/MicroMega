@@ -89,6 +89,7 @@ typedef void *__builtin_va_list;
 #define pgm_read_ptr(address_short)   short()
 
 #include "MegaSketch.ino"
+#include "DataStructinos.ino"
 #include "lcdino.ino"
 #include "servosino.ino"
 #endif
