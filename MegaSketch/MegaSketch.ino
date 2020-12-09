@@ -10,7 +10,7 @@
 #include <Servo.h>
 #include <LiquidCrystal.h>
 #include "mylcdbox.h"
-LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
+//LiquidCrystal ThelcdTeypad(8, 9, 4, 5, 6, 7);
 
 
 #pragma region servo
@@ -107,14 +107,14 @@ void setup()
 	pinMode(potpin11, INPUT);
 	pinMode(potpin12, INPUT);
 	pinMode(potpin13, INPUT);
-	pinMode(A0, INPUT);
+	
 
 	for (int s = 0; s < TotalServos; s++) {
 		ArraServos[s].attach(ArraServoPINS[s]);
 		}
 
 	}
-
+LcdBoxMenuCtrl _mulcdDrivenMenu =  LcdBoxMenuCtrl(8, 9, 4, 5, 6, 7);
 void ReadPotpins() {
  
 // left JS<----------------------
@@ -137,7 +137,7 @@ void MapPotpins() {
 	pval11_RS_uD = deadzonefilter(map(analogRead(potpin11), 330, 688, 0, PotReadScale), false);
 	pval12_RS_lR = deadzonefilter(map(analogRead(potpin12), 330, 680, 0, PotReadScale), false);
 	pval13_RS_rot = deadzonefilter(map(analogRead(potpin13), 2, 50, 0, PotReadScale),true);
-	Serial.println(pval11_RS_uD);
+//	Serial.println(pval11_RS_uD);
 	}
 
 //{pval8_LS_rot} {pval9_LS_dU} {pval10_LS_lR} {pval11_RS_uD} {pval12_RS_lR} {pval13_RS_rot}
@@ -168,9 +168,8 @@ int deadzonefilter(int argval, bool argisRot) {
 
 
 
-LED_Controls LED1(LED_BUILTIN, 300);
- 
 
+ 
 void SetAllServosTo(int argmilli) {
 	for (int i = 0; i < TotalServos; i++) {
 		ArraServos[i].writeMicroseconds(argmilli);
@@ -181,19 +180,7 @@ void SetAllServosTo(int argmilli) {
 int p = 1590;
 int temp = 1080;
 void loop(){
-   
-	//LED1.ON();
-	//LED1.OFF();
-   // ReadPotpins();
 
-	//if (Serial.available() == 0) {
-	//// Wait for User to Input Data
-	//	p = temp;
-	//	}
-	//else
-	//p=Serial.parseFloat();
-
-	//temp = p;
 
 	currentMillis = millis();
 	if (currentMillis - previousMillis >= 20)  {  
@@ -216,6 +203,8 @@ void loop(){
 			   state = 1;
 			   prevTargetValue = targetValue;
 			   currentValue = targetValue;
+			   _mulcdDrivenMenu.ON();
+//Serial.println("on ");
 			   }
 		   }
 	  // else 
@@ -226,13 +215,15 @@ void loop(){
 			   state = 0;
 			   prevTargetValue = targetValue;
 			   currentValue = targetValue;
+			   _mulcdDrivenMenu.OFF();
+//			   Serial.print("off");
 			   }
 		   }
 
 	   stepdiff = (targetValue - prevTargetValue) / (28* rate);
 	   currentValue = currentValue + stepdiff;
-	 // SetAllServosTo(currentValue);
-	  Serial.println("entered ");
-	  Serial.print(p);
+	  SetAllServosTo(currentValue);
+
+	 
 		}
 }

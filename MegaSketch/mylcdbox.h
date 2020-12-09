@@ -8,14 +8,21 @@
 #else
 	#include "WProgram.h"
 #endif
+#include <LiquidCrystal.h>
 
-class LED_Controls {
+
+class LcdBoxMenuCtrl {
 	public:
-	LED_Controls(int pin, int delay);
+	LcdBoxMenuCtrl(int rs, int rw);
+	LcdBoxMenuCtrl(int rs, int rw, int enable, int d0, int d1, int d2);
+	void SetLcd( );
+	bool __lcdSet;
 	void ON();
 	void OFF();
+	int GetCurMenuState();
 	int _pin;
 	int _delay;
+	LiquidCrystal _lcd;
 	};
 
 #endif
