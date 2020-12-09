@@ -27,11 +27,11 @@ struct SER_ds {
     };
  
     //**************Joysticks****************
-struct JOY_ds {
-    int16_t LS_lR; //pin10
-    int16_t LS_dU; //pin9
-    int16_t RS_lR; //pin12
-    int16_t RS_uD; //pin11
-    int16_t LS_rot;//pin8
-    int16_t RS_rot;//pin13
-    };
+//struct JOY_ds {
+//    int16_t LS_lR; //pin10
+//    int16_t LS_dU; //pin9
+//    int16_t RS_lR; //pin12
+//    int16_t RS_uD; //pin11
+//    int16_t LS_rot;//pin8
+//    int16_t RS_rot;//pin13
+//    };

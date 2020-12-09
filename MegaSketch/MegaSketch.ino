@@ -18,20 +18,23 @@ LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
 #define TotalServos 12
 #define DelaySpeed 50
-Servo servo0;
+Servo servo0;               
 Servo servo1;
 Servo servo2;
+
 Servo servo3;
 Servo servo4;
 Servo servo5;
+
 Servo servo6;
 Servo servo7;
 Servo servo8;
+
 Servo servo9;
 Servo servo10;
 Servo servo11;
 Servo ArraServos[12] = { servo0 ,servo1,servo2,servo3,servo4,servo5,servo6,servo7,servo8,servo9,servo10,servo11 };
-int ArraServoPINS[12]=  {22,23,24,25,26,27,28,29,30,31,32,33};
+int ArraServoPINS[12]=  {22,24,26,23,25,27,28,30,32,29,31,33}; //so that they are lines up by row of gpio ... idk look at pattern dude
 int ArraServoPOSs[12] = {00,00,00,00,00,00,00,00,00,00,00,00};
 bool ServosInitialized = false;
 int curDelay = 20;
@@ -64,87 +67,121 @@ int potpin11 = 11;
 int potpin12 = 12;
 int potpin13 = 13;
 
-int pval8 =0; //valu of the potpin
-int pval9 = 0;
-int pval10 = 0;
+int pval8_LS_rot =0; //valu of the potpin
+int pval9_LS_dU = 0;
+int pval10_LS_lR = 0;
 
-int pval11 = 0;
-int pval12 = 0;
-int pval13 = 0;
+int pval11_RS_uD = 0;
+int pval12_RS_lR = 0;
+int pval13_RS_rot = 0;
 #pragma endregion
 
+struct JOY_ds {
+	int16_t LS_lR; //pin10
+	int16_t LS_dU; //pin9
+	int16_t RS_lR; //pin12
+	int16_t RS_uD; //pin11
+	int16_t LS_rot;//pin8
+	int16_t RS_rot;//pin13
+	};
+JOY_ds localjds;
 
 void setup()
-    {
-    Serial.begin(115200);
-    pinMode(potpin8, INPUT);
-    pinMode(potpin9, INPUT);
-    pinMode(potpin10, INPUT);
-    pinMode(potpin11, INPUT);
-    pinMode(potpin12, INPUT);
-    pinMode(potpin13, INPUT);
-    pinMode(A0, INPUT);
-    }
+	{
+	Serial.begin(115200);
+	pinMode(potpin8, INPUT);
+	pinMode(potpin9, INPUT);
+	pinMode(potpin10, INPUT);
+	pinMode(potpin11, INPUT);
+	pinMode(potpin12, INPUT);
+	pinMode(potpin13, INPUT);
+	pinMode(A0, INPUT);
+
+	for (int s = 0; s < TotalServos; s++) {
+		ArraServos[s].attach(ArraServoPINS[s]);
+		}
+
+	}
 
 void ReadPotpins() {
+ 
 // left JS<----------------------
-// pval8 =analogRead(potpin8);//Rotationccw cw 7 -9-10-11 24
-pval8 = map(analogRead(potpin8),5,17 , 0, 128);
+	 pval8_LS_rot =analogRead(potpin8);//Rotationccw cw 7 -9-10-11 24
+	 pval9_LS_dU =analogRead(potpin9); //downup  508+-4 amplitude 170
+	 pval10_LS_lR =analogRead(potpin10);//rightleft  mid amplitude 170
  
+	//rightJS-------------------------------->
+	 pval11_RS_uD =analogRead(potpin11);//   512 +-6 amplitude 172
+	 pval12_RS_lR =analogRead(potpin12); //
+	 pval13_RS_rot =analogRead(potpin13);//rot  7-->  14-15-16  --->27
+	}
+void MapPotpins() {
 
- //pval9 =analogRead(potpin9); //downup  508+-4 amplitude 170
- pval9 = deadzonefilter(map(analogRead(potpin9), 338, 678, 0, PotReadScale));
+// left JS<----------------------
+	pval8_LS_rot = deadzonefilter(map(analogRead(potpin8), 0, 15, 0, PotReadScale),true);
+	pval9_LS_dU = deadzonefilter(map(analogRead(potpin9), 338, 678, 0, PotReadScale),false);
+	pval10_LS_lR = deadzonefilter(map(analogRead(potpin10), 336, 676, 0, PotReadScale), false);
+   //rightJS-------------------------------->
+	pval11_RS_uD = deadzonefilter(map(analogRead(potpin11), 330, 688, 0, PotReadScale), false);
+	pval12_RS_lR = deadzonefilter(map(analogRead(potpin12), 330, 680, 0, PotReadScale), false);
+	pval13_RS_rot = deadzonefilter(map(analogRead(potpin13), 2, 50, 0, PotReadScale),true);
+	}
+
+//{pval8_LS_rot} {pval9_LS_dU} {pval10_LS_lR} {pval11_RS_uD} {pval12_RS_lR} {pval13_RS_rot}
  
+int deadzonefilter(int argval, bool argisRot) {
 
- // pval10 =analogRead(potpin10);//rightleft  mid amplitude 170
- pval10 = deadzonefilter(map(analogRead(potpin10),336  , 676 , 0, PotReadScale));
- 
+	if (argisRot) {
+		if ((argval > ((PotReadScale / 2) - (DeadZoneHalfAmplitude/4))) && (argval < ((PotReadScale / 2) + (DeadZoneHalfAmplitude / 4))))
+			argval = (PotReadScale / 2);
 
-//rightJS-------------------------------->
-// pval11 =analogRead(potpin11);//   512 +-6 amplitude 172
- pval11 = deadzonefilter(map(analogRead(potpin11), 330, 680, 0, PotReadScale));
- 
+		if (argval < 0)argval = 0;
+		if (argval > PotReadScale)argval = PotReadScale;
 
-//  pval12 =analogRead(potpin12); //
-   pval12 = deadzonefilter(map(analogRead(potpin12),330  , 680 , 0, PotReadScale));
- 
+		}
+	else
+		{
+		if ((argval > ((PotReadScale / 2) - DeadZoneHalfAmplitude)) && (argval < ((PotReadScale / 2) + DeadZoneHalfAmplitude)))
+			argval = (PotReadScale / 2);
 
-// pval13 =analogRead(potpin13);//rot  7-->  14-15-16  --->27
-   pval13 = map(analogRead(potpin13),8 , 21 , 0, 100); 
- 
+		if (argval < 0)argval = 0;
+		if (argval > PotReadScale)argval = PotReadScale;
+		}
+  
 
-    }
- 
-int deadzonefilter(int argval) {
-
-
-    if ((argval > ((PotReadScale / 2) - DeadZoneHalfAmplitude)) && (argval < ((PotReadScale / 2) + DeadZoneHalfAmplitude)))
-        argval = (PotReadScale / 2) ;
- 
-    if (argval < 0)argval = 0;
-    if (argval > PotReadScale)argval = PotReadScale;
-
-    return argval;
-    }
+	return argval;
+	}
 
 
 
 
 LED_Controls LED1(LED_BUILTIN, 300);
  
+
+void SetAllServosTo(int argmilli) {
+	for (int i = 0; i < TotalServos; i++) {
+		ArraServos[i].writeMicroseconds(argmilli);
+		}
+	}
  
  
- 
+int p = 1590;
 void loop(){
    
-    LED1.ON();
-    LED1.OFF();
-    ReadPotpins();
-   /* currentMillis = millis();
-    if (currentMillis - previousMillis >= 10)  {  
-        previousMillis = currentMillis;
-        
-        ReadPotpins();
-         
-        }*/
+	//LED1.ON();
+	//LED1.OFF();
+   // ReadPotpins();
+	currentMillis = millis();
+	if (currentMillis - previousMillis >= 100)  {  
+		previousMillis = currentMillis;
+	   MapPotpins();
+   //   ReadPotpins();
+	   p=map(pval11_RS_uD,0,1000,830,2350);
+
+	   if (p < 830)p = 830;
+	   if (p > 2350)p = 2350;
+	   SetAllServosTo(p);
+
+		 
+		}
 }
