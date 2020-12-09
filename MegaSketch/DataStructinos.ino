@@ -12,12 +12,7 @@ struct PAGEds {
     };
 
 
-//**************Leg servo poses in ms****************
-struct LEG_ds {   // slave01 - back
-    int16_t hip;
-    int16_t shoulder;
-    int16_t elbow;
-    };
+
     //**************Body servo angles in ms****************
 struct SER_ds {   
     LEG_ds legFR;

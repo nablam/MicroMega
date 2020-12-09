@@ -40,9 +40,9 @@ bool ServosInitialized = false;
 int curDelay = 20;
 float inputRate;
 float rate;
-float currentValue;
-float targetValue;
-float prevTargetValue;
+int currentValue=500;
+int targetValue;
+int prevTargetValue;
 int state = 0;
 float stepdiff=0;
 #pragma endregion
@@ -86,6 +86,18 @@ struct JOY_ds {
 	};
 JOY_ds localjds;
 
+//**************Leg servo poses in ms****************
+struct LEG_ds {
+	int16_t hip;
+	int16_t shoulder;
+	int16_t elbow;
+	};
+
+LEG_ds Leg_FR;
+LEG_ds Leg_FL;
+LEG_ds Leg_BR;
+LEG_ds Leg_BL;
+
 void setup()
 	{
 	Serial.begin(115200);
@@ -125,6 +137,7 @@ void MapPotpins() {
 	pval11_RS_uD = deadzonefilter(map(analogRead(potpin11), 330, 688, 0, PotReadScale), false);
 	pval12_RS_lR = deadzonefilter(map(analogRead(potpin12), 330, 680, 0, PotReadScale), false);
 	pval13_RS_rot = deadzonefilter(map(analogRead(potpin13), 2, 50, 0, PotReadScale),true);
+	Serial.println(pval11_RS_uD);
 	}
 
 //{pval8_LS_rot} {pval9_LS_dU} {pval10_LS_lR} {pval11_RS_uD} {pval12_RS_lR} {pval13_RS_rot}
@@ -166,22 +179,60 @@ void SetAllServosTo(int argmilli) {
  
  
 int p = 1590;
+int temp = 1080;
 void loop(){
    
 	//LED1.ON();
 	//LED1.OFF();
    // ReadPotpins();
+
+	//if (Serial.available() == 0) {
+	//// Wait for User to Input Data
+	//	p = temp;
+	//	}
+	//else
+	//p=Serial.parseFloat();
+
+	//temp = p;
+
 	currentMillis = millis();
-	if (currentMillis - previousMillis >= 100)  {  
+	if (currentMillis - previousMillis >= 20)  {  
 		previousMillis = currentMillis;
 	   MapPotpins();
    //   ReadPotpins();
-	   p=map(pval11_RS_uD,0,1000,830,2350);
+	  // p=map(pval11_RS_uD,0,1000,830,2350);
 
-	   if (p < 830)p = 830;
-	   if (p > 2350)p = 2350;
-	   SetAllServosTo(p);
+	 
+	   //SetAllServosTo(p);
+	   inputRate = map(pval11_RS_uD, 0, 1000, 1, 10);;// pval11_RS_uD;//
+	  // rate == map(inputRate, 0, 1023, 45, 135);
+	   rate = inputRate;
+	  /* if (rate > 10)rate = 10;
+	   if (rate < 1)rate = 1;*/
 
-		 
+	   if (state == 0) {
+		   targetValue = 720; //lowend
+		   if (currentValue <= targetValue) {
+			   state = 1;
+			   prevTargetValue = targetValue;
+			   currentValue = targetValue;
+			   }
+		   }
+	  // else 
+		   if (state == 1)
+		   {
+		   targetValue = 1440; //highend
+		   if (currentValue >= targetValue) {
+			   state = 0;
+			   prevTargetValue = targetValue;
+			   currentValue = targetValue;
+			   }
+		   }
+
+	   stepdiff = (targetValue - prevTargetValue) / (28* rate);
+	   currentValue = currentValue + stepdiff;
+	 // SetAllServosTo(currentValue);
+	  Serial.println("entered ");
+	  Serial.print(p);
 		}
 }
