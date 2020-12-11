@@ -76,6 +76,8 @@ int pval12_RS_lR = 0;
 int pval13_RS_rot = 0;
 #pragma endregion
 
+
+
 struct JOY_ds {
 	int16_t LS_lR; //pin10
 	int16_t LS_dU; //pin9
@@ -84,7 +86,7 @@ struct JOY_ds {
 	int16_t LS_rot;//pin8
 	int16_t RS_rot;//pin13
 	};
-JOY_ds localjds;
+JOY_ds _masterjds;
 
 //**************Leg servo poses in ms****************
 struct LEG_ds {
@@ -97,6 +99,10 @@ LEG_ds Leg_FR;
 LEG_ds Leg_FL;
 LEG_ds Leg_BR;
 LEG_ds Leg_BL;
+
+
+LcdBoxMenuCtrl* _mulcdDrivenMenu;// = LcdBoxMenuCtrl(8, 9, 4, 5, 6, 7);
+
 
 void setup()
 	{
@@ -112,9 +118,9 @@ void setup()
 	for (int s = 0; s < TotalServos; s++) {
 		ArraServos[s].attach(ArraServoPINS[s]);
 		}
+	_mulcdDrivenMenu =  new LcdBoxMenuCtrl(8, 9, 4, 5, 6, 7);
 
 	}
-LcdBoxMenuCtrl _mulcdDrivenMenu =  LcdBoxMenuCtrl(8, 9, 4, 5, 6, 7);
 void ReadPotpins() {
  
 // left JS<----------------------
@@ -127,7 +133,7 @@ void ReadPotpins() {
 	 pval12_RS_lR =analogRead(potpin12); //
 	 pval13_RS_rot =analogRead(potpin13);//rot  7-->  14-15-16  --->27
 	}
-void MapPotpins() {
+void Map01K_update_masterJS() {
 
 // left JS<----------------------
 	pval8_LS_rot = deadzonefilter(map(analogRead(potpin8), 0, 15, 0, PotReadScale),true);
@@ -138,6 +144,15 @@ void MapPotpins() {
 	pval12_RS_lR = deadzonefilter(map(analogRead(potpin12), 330, 680, 0, PotReadScale), false);
 	pval13_RS_rot = deadzonefilter(map(analogRead(potpin13), 2, 50, 0, PotReadScale),true);
 //	Serial.println(pval11_RS_uD);
+
+	_masterjds.LS_rot = pval8_LS_rot;
+	_masterjds.LS_dU = pval9_LS_dU;
+	_masterjds.LS_lR = pval10_LS_lR;
+
+	_masterjds.RS_uD = pval11_RS_uD;
+	_masterjds.RS_lR = pval12_RS_lR;
+	_masterjds.RS_rot = pval13_RS_rot;
+
 	}
 
 //{pval8_LS_rot} {pval9_LS_dU} {pval10_LS_lR} {pval11_RS_uD} {pval12_RS_lR} {pval13_RS_rot}
@@ -179,51 +194,58 @@ void SetAllServosTo(int argmilli) {
  
 int p = 1590;
 int temp = 1080;
+
+
+
+
+void ReadInputRate_sweep_noservomove() {
+
+	inputRate = map(pval11_RS_uD, 0, 1000, 1, 10);;// pval11_RS_uD;//
+	rate = inputRate;
+
+
+	if (state == 0) {
+		targetValue = 1080; //lowend
+		if (currentValue <= targetValue) {
+			state = 1;
+			prevTargetValue = targetValue;
+			currentValue = targetValue;
+			_mulcdDrivenMenu->ON();
+//Serial.println("on ");
+			}
+		}
+   // else 
+	if (state == 1)
+		{
+		targetValue = 1880; //highend
+		if (currentValue >= targetValue) {
+			state = 0;
+			prevTargetValue = targetValue;
+			currentValue = targetValue;
+			_mulcdDrivenMenu->OFF();
+//			   Serial.print("off");
+			}
+		}
+
+	stepdiff = (targetValue - prevTargetValue) / (28 * rate);
+	currentValue = currentValue + stepdiff;
+
+	}
+
 void loop(){
 
 
 	currentMillis = millis();
 	if (currentMillis - previousMillis >= 20)  {  
 		previousMillis = currentMillis;
-	   MapPotpins();
-   //   ReadPotpins();
-	  // p=map(pval11_RS_uD,0,1000,830,2350);
 
-	 
-	   //SetAllServosTo(p);
-	   inputRate = map(pval11_RS_uD, 0, 1000, 1, 10);;// pval11_RS_uD;//
-	  // rate == map(inputRate, 0, 1023, 45, 135);
-	   rate = inputRate;
-	  /* if (rate > 10)rate = 10;
-	   if (rate < 1)rate = 1;*/
+		//TASK 1
+		Map01K_update_masterJS();
+   
 
-	   if (state == 0) {
-		   targetValue = 720; //lowend
-		   if (currentValue <= targetValue) {
-			   state = 1;
-			   prevTargetValue = targetValue;
-			   currentValue = targetValue;
-			   _mulcdDrivenMenu.ON();
-//Serial.println("on ");
-			   }
-		   }
-	  // else 
-		   if (state == 1)
-		   {
-		   targetValue = 1440; //highend
-		   if (currentValue >= targetValue) {
-			   state = 0;
-			   prevTargetValue = targetValue;
-			   currentValue = targetValue;
-			   _mulcdDrivenMenu.OFF();
-//			   Serial.print("off");
-			   }
-		   }
-
-	   stepdiff = (targetValue - prevTargetValue) / (28* rate);
-	   currentValue = currentValue + stepdiff;
-	  SetAllServosTo(currentValue);
-
+	 // ArraServos[11].writeMicroseconds(map(pval10_LS_lR,0,1000,1080,1880));
+	  // SetAllServosTo(1440);
+		ReadInputRate_sweep_noservomove();
 	 
 		}
 }
