@@ -28,7 +28,6 @@ class LcdBoxMenuCtrl {
 #define btnSELECT 4
 #define btnNONE 5
 
-
 	LcdBoxMenuCtrl(int rs, int rw);
 	LcdBoxMenuCtrl(int rs, int rw, int enable, int d0, int d1, int d2);
 	void HandleKEyPresses();
@@ -41,17 +40,9 @@ class LcdBoxMenuCtrl {
 	bool _lock;
 	int ReadKeysNonBlock();
 
-
-	void ProcessSelctionSubMenu_0_zeroing();
-	void ProcessSelectionSubMenu_1_servos();
-	void ProcessSelectionSubMenu_2_legs();
-	void ProcessSelectionSubMenu_3_kinematic();
-	void ProcessSelectionSubMenu_4_poses();
  
 
 #pragma region menus
-
-
 	int IndeciesOfSubFunctionSelections[MAXFunctions] = { 0,0,0,0,0 };
 	int MaxIndeciesOfSubFunctionSelections[MAXFunctions] = { MAXCALIBS,MAXSERVOS,MAXLEGS,MAXKINEMATICS,MAXPOSES };
 	String PageTites[MAXFunctions] = {
@@ -108,10 +99,7 @@ class LcdBoxMenuCtrl {
 
 		};
 
-
-
 #pragma endregion
-
 	};
 
 #endif
