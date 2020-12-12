@@ -106,6 +106,8 @@ void LcdBoxMenuCtrl::DoSwitchContext() {
 
 			case btnUP:
 				{
+				if (_lock) return;
+				_lock = true;
 				STATE_MENU++;
 				if (STATE_MENU > TotalSTATESmenue) { STATE_MENU = 0; } //rollback
 				this->_lcd.clear();
@@ -121,8 +123,11 @@ void LcdBoxMenuCtrl::DoSwitchContext() {
 				}
 			case btnDOWN:
 				{
+				if (_lock) return;
+				_lock = true;
+
 				STATE_MENU--;
-				if (STATE_MENU < 0) { STATE_MENU = TotalSTATESmenue; } //rollback
+				if (STATE_MENU < 0) { STATE_MENU = TotalSTATESmenue -1; } //rollback
 				this->_lcd.clear();
 				this->_lcd.setCursor(0, 0);
 				this->_lcd.print(this->PageTites[STATE_MENU]);
@@ -134,6 +139,9 @@ void LcdBoxMenuCtrl::DoSwitchContext() {
 				}
 			case btnSELECT:
 				{
+				if (_lock) return;
+				_lock = true;
+
 				if (_IsSelectedPage == false) {
 					_IsSelectedPage = true;
 					_IsSelectedServo = false;
@@ -166,6 +174,9 @@ void LcdBoxMenuCtrl::DoSwitchContext() {
 				}
 			case btnRIGHT:
 				{
+				if (_lock) return;
+				_lock = true;
+
 				this->_lcd.setCursor(0, 1);
 				if (_IsSelectedPage) {
 					
@@ -203,6 +214,8 @@ void LcdBoxMenuCtrl::DoSwitchContext() {
 				}
 			case btnLEFT:
 				{
+				if (_lock) return;
+				_lock = true;
 				this->_lcd.setCursor(0, 1);
 				if (_IsSelectedPage) {
 
@@ -238,7 +251,8 @@ void LcdBoxMenuCtrl::DoSwitchContext() {
 				}
 			case btnNONE:
 				{
-		//		lcd.print("nada  ");
+				 _lock = false;
+
 				break;
 				}
 		}//xswitch

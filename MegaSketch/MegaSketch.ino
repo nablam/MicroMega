@@ -242,10 +242,13 @@ void loop(){
 		//TASK 1
 		Map01K_update_masterJS();
    
+		//TASK 2
+		_mulcdDrivenMenu->DoSwitchContext();
+
 
 	 // ArraServos[11].writeMicroseconds(map(pval10_LS_lR,0,1000,1080,1880));
 	  // SetAllServosTo(1440);
-		ReadInputRate_sweep_noservomove();
+		//ReadInputRate_sweep_noservomove();
 	 
 		}
 }

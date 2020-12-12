@@ -63,6 +63,7 @@ class LcdBoxMenuCtrl {
 	bool _isSelectedLeg;
 	bool _isSelectedKinematics;
 	bool _isSelectedPose;
+	bool _lock;
 	LiquidCrystal _lcd;
 
 
@@ -70,7 +71,7 @@ class LcdBoxMenuCtrl {
 
 
 
-	int STATE_MENU = -1; //noting , the next states are explained bellow
+	int STATE_MENU = 0; //noting , the next states are explained bellow
 	String PageTites[TotalSTATESmenue] = { 
 	//  "________________"	
 		"0-zero all      ",
@@ -107,7 +108,7 @@ class LcdBoxMenuCtrl {
 		"pos  Z.. X.. Y..",
 		"rol  Z.. X.. Y.."};
 
-	String Poses4Titles[TotalLEGS] = {
+	String Poses4Titles[TotalPOSES] = {
 		"walk forward    ",
 		"side-step       ",
 		"lawdown         ",
