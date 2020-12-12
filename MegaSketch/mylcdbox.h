@@ -13,11 +13,13 @@
 
 class LcdBoxMenuCtrl {
 	public:
-#define TotalSTATESmenue 5
-#define TotalSERVOS 12
-#define TotalLEGS 4
-#define TotalKINEMATICS 2
-#define TotalPOSES 4
+#define MAXFunctions 5
+#define MAXCALIBS 3
+#define MAXSERVOS 12
+#define MAXLEGS 4
+#define MAXKINEMATICS 2
+#define MAXPOSES 4
+
 #define btnRIGHT 0
 #define btnRIGHT 0
 #define btnUP 1
@@ -29,148 +31,83 @@ class LcdBoxMenuCtrl {
 
 	LcdBoxMenuCtrl(int rs, int rw);
 	LcdBoxMenuCtrl(int rs, int rw, int enable, int d0, int d1, int d2);
-	void StartLcd( );
-	bool __lcdSet;
-	void ON();
-	void OFF();
-	void ONOFF();
-	int ReadKeysNonBlock();
-	void DoSwitchContext();
-	void ProcessSelctionSubMenu_0_zeroing();
-	void Browse_0_zeroing(bool argRightbtn);
-	void ProcessSelectionSubMenu_1_servos();
-	void Browse_1_servos(bool argRightbtn);
-	void ProcessSelectionSubMenu_2_legs();
-	void Browse_2_legs(bool argRightbtn);
-	void ProcessSelectionSubMenu_3_kinematic();
-	void Browse_3_kinematics(bool argRightbtn);
-	void ProcessSelectionSubMenu_4_poses();
-	void Browse_4_poses(bool argRightbtn);
-	int _curTimer;
-	int _delayTimerZeroing;
-	int _curServoSelced;
-	int _curLegSelecetde;
-	int _curKineSelected;
-	int _curPoseSelected;
+	void HandleKEyPresses();
 
-
-
-
-	int _pin;
-	int _delay;
-	bool _IsSelectedPage;
-	bool _IsSelectedServo;
-	bool _isSelectedLeg;
-	bool _isSelectedKinematics;
-	bool _isSelectedPose;
-	bool _lock;
+	private:
 	LiquidCrystal _lcd;
+	int lcd_key = 0;
+	int adc_key_in = 0;
+	int _CurFunction = 0; //noting , the next states are explained bellow
+	bool _lock;
+	int ReadKeysNonBlock();
 
+
+	void ProcessSelctionSubMenu_0_zeroing();
+	void ProcessSelectionSubMenu_1_servos();
+	void ProcessSelectionSubMenu_2_legs();
+	void ProcessSelectionSubMenu_3_kinematic();
+	void ProcessSelectionSubMenu_4_poses();
+ 
 
 #pragma region menus
 
 
-
-	int STATE_MENU = 0; //noting , the next states are explained bellow
-	String PageTites[TotalSTATESmenue] = { 
-	//  "________________"	
-		"0-zero all      ",
-		"1-single manual ",
-		"2-leg manual    ",
-		"3-FULL Knematic ",
-		"4-poses         "
+	int IndeciesOfSubFunctionSelections[MAXFunctions] = { 0,0,0,0,0 };
+	int MaxIndeciesOfSubFunctionSelections[MAXFunctions] = { MAXCALIBS,MAXSERVOS,MAXLEGS,MAXKINEMATICS,MAXPOSES };
+	String PageTites[MAXFunctions] = {
+//  "________________"	
+	"0-zero all      ",
+	"1-single manual ",
+	"2-leg manual    ",
+	"3-FULL Knematic ",
+	"4-poses         "
 		};
 
+	String Functions2DTable[MAXFunctions][13] =
+		{
+			{
+				"All zero        ",
+				"All min         ",
+				"All max         ",
+				"!..outofbounds.!"
+			},
+			{
+				"FRL_22  0.. xxxx",
+				"FL1_24  .1. XXXX",
+				"FL2_26  ..2 XXXX",
+				"FR0_23  0.. XXXX",
+				"FR1_25  .1. XXXX",
+				"FR2_27  ..2 XXXX",
+				"BL0_28  0.. XXXX",
+				"BL1_30  .1. XXXX",
+				"BL2_32  ..2 XXXX",
+				"BR0_29  0.. XXXX",
+				"BR1_31  .1. XXXX",
+				"BR2_33  ..2 XXXX",
+				"!..outofbounds.!"
+			},
+			 {
+				"FLz=.. x=.. y=..",
+				"FRz=.. x=.. y=..",
+				"BRz=.. x=.. y=..",
+				"BLz=.. x=.. y=..",
+				"!..outofbounds.!",
+			},
+		   {
+				"pos  Z.. X.. Y..",
+				"rol  Z.. X.. Y..",
+				"!..outofbounds.!",
+		   },
+		   {
+				"walk forward    ",
+				"side-step       ",
+				"lawdown         ",
+				"silly           ",
+				"!..outofbounds.!",
+			}
 
-	String Servo12Titles[TotalSERVOS] = {
-		"FRL_22  0.. xxxx",
-		"FL1_24  .1. XXXX",
-		"FL2_26  ..2 XXXX",
-		"FR0_23  0.. XXXX",
-		"FR1_25  .1. XXXX",
-		"FR2_27  ..2 XXXX",
-		"BL0_28  0.. XXXX",
-		"BL1_30  .1. XXXX",
-		"BL2_32  ..2 XXXX",
-		"BR0_29  0.. XXXX",
-		"BR1_31  .1. XXXX",
-		"BR2_33  ..2 XXXX"
 		};
 
-	String Legs4Titles[TotalLEGS] = {
-		"FLz=.. x=.. y=..",
-		"FRz=.. x=.. y=..",
-		"BRz=.. x=.. y=..",
-		"BLz=.. x=.. y=.."
-		};
-
-	String Kinematics2Titles[TotalKINEMATICS] = {
-		"pos  Z.. X.. Y..",
-		"rol  Z.. X.. Y.."};
-
-	String Poses4Titles[TotalPOSES] = {
-		"walk forward    ",
-		"side-step       ",
-		"lawdown         ",
-		"silly           "
-		};
-
-	// define some values used by the panel and buttons
-	int lcd_key = 0;
-	int adc_key_in = 0;
-
-	//const int btnRIGHT = 0;
-	//const int btnUP   =  1;
-	//const int btnDOWN =  2;
-	//const int btnLEFT  = 3;
-	//const int btnSELECT =4;
-	//const int btnNONE  = 5;
-	 
-	 
-
-
-	//0-zero all          
-	//-lcd lr_select
-	// ________________
-	// zero>  
-	// <min>
-	// <max
-
-	// 1-single manual	 test with RS_lR
-	// "________________"
-	// "FRL_22  0.. xxxx"
-	// "FL1_24  .1. XXXX"
-	// "FL2_26  ..2 XXXX"
-
-	// "FR0_23  0.. XXXX"
-	// "FR1_25  .1. XXXX"
-	// "FR2_27  ..2 XXXX"
-
-	// "BL0_28  0.. XXXX"
-	// "BL1_30  .1. XXXX"
-	// "BL2_32  ..2 XXXX"
-
-	// "BR0_29  0.. XXXX"
-	// "BR1_31  .1. XXXX"
-	// "BR2_33  ..2 XXXX"
-
-	//2 single leg manual test inverse kinematics
-	// "FLz=.. x=.. y=.."
-	// "FRz=.. x=.. y=.."
-	// "BRz=.. x=.. y=.."
-	// "BLz=.. x=.. y=.."
-
-
-	//3 all legs manual invers kinematics
-	// "pos  Z.. X.. Y.."
-	// "rol  Z.. X.. Y.."
-	// "
-
-	//4 walk forward cycle
-	// "forward         "
-	// "side step       "
-	// "laydown         "
-	// "silly           "
 
 
 #pragma endregion

@@ -210,7 +210,6 @@ void ReadInputRate_sweep_noservomove() {
 			state = 1;
 			prevTargetValue = targetValue;
 			currentValue = targetValue;
-			_mulcdDrivenMenu->ON();
 //Serial.println("on ");
 			}
 		}
@@ -222,7 +221,6 @@ void ReadInputRate_sweep_noservomove() {
 			state = 0;
 			prevTargetValue = targetValue;
 			currentValue = targetValue;
-			_mulcdDrivenMenu->OFF();
 //			   Serial.print("off");
 			}
 		}
@@ -243,7 +241,7 @@ void loop(){
 		Map01K_update_masterJS();
    
 		//TASK 2
-		_mulcdDrivenMenu->DoSwitchContext();
+		_mulcdDrivenMenu->HandleKEyPresses();
 
 
 	 // ArraServos[11].writeMicroseconds(map(pval10_LS_lR,0,1000,1080,1880));
