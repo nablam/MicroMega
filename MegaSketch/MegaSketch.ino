@@ -92,6 +92,8 @@ struct JOY_ds {
 	};
 JOY_ds _masterjds;
 
+//*************needMyservoObjects**********
+
 //**************Leg servo poses in ms****************
 struct LEG_ds {
 	int16_t hip;
@@ -195,89 +197,92 @@ void loop(){
 					break;
 					//minmaxes
 				case 0:
-					Serial.println("zero all");
+					//Serial.println("zero all");
+					SetAllServosTo(SERVOMID);
 					break;
 				case 1:
-					Serial.println("min all");
+				//	Serial.println("min all");
+					SetAllServosTo(SERVOMIN + 100);
 					break;
 				case 2:
-					Serial.println("max all");
+					//Serial.println("max all");
+					SetAllServosTo(SERVOMAX -100);
 					break;
 
 
 
 					//servos
 				case 12:
-					Serial.println("FRL_22");
+					//Serial.println("FRL_22");
 					break;
 				case 13:
-					Serial.println("FL1_24");
+					//Serial.println("FL1_24");
 					break;
 				case 14:
-					Serial.println("FL2_26");
+					//Serial.println("FL2_26");
 					break;
 				case 15:
-					Serial.println("FR0_23");
+					//Serial.println("FR0_23");
 					
 					break;
 				case 16:
-					Serial.println("FR1_25");
+					//Serial.println("FR1_25");
 					break;
 				case 17:
-					Serial.println("FR2_27");
+					//Serial.println("FR2_27");
 					break;
 				case 18:
-					Serial.println("BL0_28");
+					//Serial.println("BL0_28");
 					break;
 				case 19:
-					Serial.println("BL1_30");
+					//Serial.println("BL1_30");
 					break;
 				case 20:
-					Serial.println("BL2_32");
+					//Serial.println("BL2_32");
 					break;
 				case 21:
-					Serial.println("BR0_29");
+					//Serial.println("BR0_29");
 					break;
 				case 22:
-					Serial.println("BR1_31");
+					//Serial.println("BR1_31");
 					break;
 				case 23:
-					Serial.println("BR2_33");
+					//Serial.println("BR2_33");
 					break;
 			
 					//legs
 				case 24:
-					Serial.println("FL");
+					//Serial.println("FL");
 					break;
 				case 25:
-					Serial.println("FR");
+					//Serial.println("FR");
 					break;
 				case 26:
-					Serial.println("BR");
+					//Serial.println("BR");
 					break;
 				case 27:
-					Serial.println("BL");
+					//Serial.println("BL");
 					break;
 					//kinematics 12*3
 				case 36:
-					Serial.println("kine pos");
+					//Serial.println("kine pos");
 					break;
 				case 37:
-					Serial.println("kine roll");
+					//Serial.println("kine roll");
 					break;
 					
 					//poses 12*4
 				case 48:
-					Serial.println("walk");
+					//Serial.println("walk");
 					break;
 				case 49:
-					Serial.println("side");
+					//Serial.println("side");
 					break;
 				case 50:
-					Serial.println("lay");
+					//Serial.println("lay");
 					break;
 				case 51:
-					Serial.println("ready");
+					//Serial.println("ready");
 					break;
 
 
