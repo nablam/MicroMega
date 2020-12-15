@@ -40,6 +40,43 @@ Servo ArraServos[12] = { servo0 ,servo1,servo2,servo3,servo4,servo5,servo6,servo
 int ArraServoValuesBackup[12] = { 0,0,0,0,0,0,0,0,0,0,0,10 };
 int ArraServoPINS[12]=  {22,24,26,23,25,27,28,30,32,29,31,33}; //so that they are lines up by row of gpio ... idk look at pattern dude
 int ArraServoOffsets[12] = {0,0,0,0,0,0,0,0,0,0,0,0};
+int ArraServo_MINS[12] = {  1080,1080,1080,
+							1080,1080,1080, 
+							1080,1080,1080,
+							1080,1080,1080 };
+
+int ArraServo_MAX[12] = {   1800,1800,1800,
+							1800,1800,1800,
+							1800,1800,1800,
+							1800,1800,1800 };
+
+
+int ArraServo_MID[12] = {  1440,1440,1440,
+							1440,1440,1440,
+							1440,1440,1440,
+							1440,1440,1440 };
+
+
+
+int ArraServo_MINS_v1[12] = { 1080,1080,720,
+							1080,1080,720,
+							1080,1080,720,
+							1080,1080,720 };
+
+int ArraServo_MAX_v1[12] = { 1800,1800,1440,
+							1800,1800,1440,
+							1800,1800,1440,
+							1800,1800,1440 };
+
+
+int ArraServo_MID_v1[12] = { 1440,1440,1440,
+							1440,1440,1440,
+							1440,1440,1440,
+							1440,1440,1440 };
+
+
+
+
 int ArraServoPOSs[12] = {00,00,00,00,00,00,00,00,00,00,00,00};
 bool ServosInitialized = false;
 int curDelay = 20;
@@ -170,14 +207,53 @@ void ReadInputRate_sweep_noservomove() {
 
 	}
 bool testboool = false;
-int testint = 0;
+int Mode_fromLcdMenu = 0;
 void loop(){
 
 
 	currentMillis = millis();
 	if (currentMillis - previousMillis >= 20)  {  
+		
 		previousMillis = currentMillis;
 
+
+		//servo0 min 900
+		//
+		//          +540
+		//
+		//   mid 1440
+		//
+		//           +540
+		//
+		//servo0 max 1980
+
+		
+		
+		//servo1 min 952
+		//
+		//          +488
+		//
+		//   mid 1440
+		//
+		//           +488
+		//
+		//servo1 max 1936
+
+
+		//servo2 min 200
+		//
+		//          +1200
+		//
+		//   mid 1440
+		//
+		//           +1200
+		//
+		//servo2 max 2640
+
+
+		SetServoToMilis(0, 1980);
+
+		/*
 		//TASK 1
 		Map01K_update_masterJS();
    
@@ -187,12 +263,12 @@ void loop(){
 		//if (testboool) {
 		//TASK 3 
 
-			testint = _mulcdDrivenMenu->Get_cuStatIndex();
+		  Mode_fromLcdMenu = _mulcdDrivenMenu->Get_cuStatIndex();
 		//	}
 
 
 
-		switch (testint) {
+		switch (Mode_fromLcdMenu) {
 			
 				case 999:
 					break;
@@ -215,73 +291,83 @@ void loop(){
 					//servos
 				case 12:
 					//Serial.println("FRL_22");
-					MoveServoWithJS(testint - 12,false);
+					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12,false);
 					break;
 				case 13:
 					//Serial.println("FL1_24");
-					MoveServoWithJS(testint - 12,true);
+					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12,true);
 					break;
 				case 14:
 					//Serial.println("FL2_26");
-					MoveServoWithJS(testint - 12,true);
+					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12,true);
 					break;
 				case 15:
 					//Serial.println("FR0_23");
-					MoveServoWithJS(testint - 12, false);
+					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12, false);
 					
 					break;
 				case 16:
 					//Serial.println("FR1_25");
-					MoveServoWithJS(testint - 12,false);
+					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12,false);
 					break;
 				case 17:
 					//Serial.println("FR2_27");
-					MoveServoWithJS(testint - 12, false);
+					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12, false);
 					break;
 				case 18:
 					//Serial.println("BL0_28");
-					MoveServoWithJS(testint - 12, true);
+					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12, true);
 					break;
 				case 19:
 					//Serial.println("BL1_30");
-					MoveServoWithJS(testint - 12, true);
+					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12, true);
 					break;
 				case 20:
 					//Serial.println("BL2_32");
-					MoveServoWithJS(testint - 12, true);
+					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12, true);
 					break;
 				case 21:
 					//Serial.println("BR0_29");
-					MoveServoWithJS(testint - 12,true);
+					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12,true);
 					break;
 				case 22:
 					//Serial.println("BR1_31");
-					MoveServoWithJS(testint - 12, false);
+					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12, false);
 					break;
 				case 23:
 					//Serial.println("BR2_33");
-					MoveServoWithJS(testint - 12, false);
+					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12, false);
 					break;
 			
 					//legs
 				case 24:
 					//Serial.println("FL");
+					MoveShoulderWithJS(Mode_fromLcdMenu - 24);
 					break;
 				case 25:
 					//Serial.println("FR");
+					MoveShoulderWithJS(Mode_fromLcdMenu - 24);
+
 					break;
 				case 26:
 					//Serial.println("BR");
+					MoveShoulderWithJS(Mode_fromLcdMenu - 24);
+
 					break;
 				case 27:
 					//Serial.println("BL");
+					MoveShoulderWithJS(Mode_fromLcdMenu - 24);
 					break;
+
+
 					//kinematics 12*3
 				case 36:
 					//Serial.println("kine pos");
+					Kinematic_Pos_KneesIN();
 					break;
 				case 37:
 					//Serial.println("kine roll");
+					Kinematic_Pos_KneesOUT();
 					break;
 					
 					//poses 12*4
@@ -301,10 +387,12 @@ void loop(){
 
 			
 			}
+			*/
 
 	 // ArraServos[11].writeMicroseconds(map(pval10_LS_lR,0,1000,1080,1880));
 	  // SetAllServosTo(1440);
 		//ReadInputRate_sweep_noservomove();
 	 
 		}
+
 }
