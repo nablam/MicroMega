@@ -22,6 +22,7 @@
     <None Include="servosino.ino" />
     <None Include="lcdino.ino" />
     <None Include="DataStructinos.ino" />
+    <None Include="PotsCTRLINO.ino" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.MegaSketch.vsarduino.h">

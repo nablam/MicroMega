@@ -121,6 +121,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="PotsCTRLINO.ino">
+      <FileType>CppCode</FileType>
+    </None>
     <None Include="servosino.ino">
       <FileType>CppCode</FileType>
     </None>

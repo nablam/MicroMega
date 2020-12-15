@@ -32,6 +32,7 @@ class LcdBoxMenuCtrl {
 	LcdBoxMenuCtrl(int rs, int rw, int enable, int d0, int d1, int d2);
 	bool HandleKEyPresses();
 	int Get_cuStatIndex();
+	void OutputServoPOS(int argServoPos);
 
 	private:
 	LiquidCrystal _lcd;

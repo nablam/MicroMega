@@ -15,7 +15,7 @@ LcdBoxMenuCtrl::LcdBoxMenuCtrl(int rs, int rw) : _lcd(8, 9, 4, 5, 6, 7) {
 LcdBoxMenuCtrl::LcdBoxMenuCtrl(int rs, int rw, int enable, int d0, int d1, int d2) : _lcd(rs, rw, enable, d0, d1, d2) {
 	_lcd.begin(16,2);
 	_lcd.setCursor(0, 0);
-	_lcd.print("  Robodogo v0  ");
+	_lcd.print("  Robodogo v0.1");
 	_lcd.setCursor(0, 1);
 	_lcd.print("Select to start");
 	pinMode(A0, INPUT);
@@ -104,6 +104,10 @@ bool LcdBoxMenuCtrl::HandleKEyPresses() {
 int  LcdBoxMenuCtrl::Get_cuStatIndex() {
 	return this->_curStateIndex;
 	};
+void LcdBoxMenuCtrl::OutputServoPOS(int argServoPos) {
+	_lcd.setCursor(12, 1);
+	_lcd.print(argServoPos);
+	}
 #pragma endregion
 
 int LcdBoxMenuCtrl::ReadKeysNonBlock() {

@@ -37,8 +37,9 @@ Servo servo9;
 Servo servo10;
 Servo servo11;
 Servo ArraServos[12] = { servo0 ,servo1,servo2,servo3,servo4,servo5,servo6,servo7,servo8,servo9,servo10,servo11 };
-int ArraServoValuesBackup[12] = { 0,0,0,0,0,0,0,0,0,0,0,0 };
+int ArraServoValuesBackup[12] = { 0,0,0,0,0,0,0,0,0,0,0,10 };
 int ArraServoPINS[12]=  {22,24,26,23,25,27,28,30,32,29,31,33}; //so that they are lines up by row of gpio ... idk look at pattern dude
+int ArraServoOffsets[12] = {0,0,0,0,0,0,0,0,0,0,0,0};
 int ArraServoPOSs[12] = {00,00,00,00,00,00,00,00,00,00,00,00};
 bool ServosInitialized = false;
 int curDelay = 20;
@@ -214,40 +215,52 @@ void loop(){
 					//servos
 				case 12:
 					//Serial.println("FRL_22");
+					MoveServoWithJS(testint - 12,false);
 					break;
 				case 13:
 					//Serial.println("FL1_24");
+					MoveServoWithJS(testint - 12,true);
 					break;
 				case 14:
 					//Serial.println("FL2_26");
+					MoveServoWithJS(testint - 12,true);
 					break;
 				case 15:
 					//Serial.println("FR0_23");
+					MoveServoWithJS(testint - 12, false);
 					
 					break;
 				case 16:
 					//Serial.println("FR1_25");
+					MoveServoWithJS(testint - 12,false);
 					break;
 				case 17:
 					//Serial.println("FR2_27");
+					MoveServoWithJS(testint - 12, false);
 					break;
 				case 18:
 					//Serial.println("BL0_28");
+					MoveServoWithJS(testint - 12, true);
 					break;
 				case 19:
 					//Serial.println("BL1_30");
+					MoveServoWithJS(testint - 12, true);
 					break;
 				case 20:
 					//Serial.println("BL2_32");
+					MoveServoWithJS(testint - 12, true);
 					break;
 				case 21:
 					//Serial.println("BR0_29");
+					MoveServoWithJS(testint - 12,true);
 					break;
 				case 22:
 					//Serial.println("BR1_31");
+					MoveServoWithJS(testint - 12, false);
 					break;
 				case 23:
 					//Serial.println("BR2_33");
+					MoveServoWithJS(testint - 12, false);
 					break;
 			
 					//legs
