@@ -1,3 +1,21 @@
+
+
+void SetAllServosTo(int argmilli) {
+    for (int i = 0; i < TotalServos; i++) {
+        ArraServos[i].writeMicroseconds(argmilli);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
 //int x = 0;
 //
 //int doit() {

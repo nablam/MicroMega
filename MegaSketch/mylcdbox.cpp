@@ -20,13 +20,16 @@ LcdBoxMenuCtrl::LcdBoxMenuCtrl(int rs, int rw, int enable, int d0, int d1, int d
 	_lcd.print("Select to start");
 	pinMode(A0, INPUT);
 	Serial.println("lcd object inited");
+	_curStateIndex = 999;
 	}
 
-void LcdBoxMenuCtrl::HandleKEyPresses() {
+bool LcdBoxMenuCtrl::HandleKEyPresses() {
 	_lcd.setCursor(0, 1);            // move to the begining of the second line
 	if (_CurFunction < 0)_CurFunction = MAXFunctions - 1;
 	if (_CurFunction >= MAXFunctions) _CurFunction = 0;
 	lcd_key = this->ReadKeysNonBlock();  // read the buttons
+	
+	_selectPressed = false;
 	switch (lcd_key)               // depending on which button was pushed, we perform an action
 		{
 			case btnUP:
@@ -39,6 +42,7 @@ void LcdBoxMenuCtrl::HandleKEyPresses() {
 				this->_lcd.setCursor(0, 0);
 				this->_lcd.print(this->PageTites[_CurFunction]);
 				this->_lcd.setCursor(0, 1);
+				_curStateIndex = (_CurFunction * 12) + IndeciesOfSubFunctionSelections[_CurFunction];
 				this->_lcd.print(this->Functions2DTable[_CurFunction][IndeciesOfSubFunctionSelections[_CurFunction]]);
 				break;
 				}
@@ -51,12 +55,15 @@ void LcdBoxMenuCtrl::HandleKEyPresses() {
 				this->_lcd.setCursor(0, 0);
 				this->_lcd.print(this->PageTites[_CurFunction]);
 				this->_lcd.setCursor(0, 1);
+				_curStateIndex = (_CurFunction * 12) + IndeciesOfSubFunctionSelections[_CurFunction];
 				this->_lcd.print(this->Functions2DTable[_CurFunction][IndeciesOfSubFunctionSelections[_CurFunction]]);
 				break;
 				}
 			case btnSELECT:
 				{
 				if (_lock) break;_lock = true;
+
+				_selectPressed = true; //this will signal the main ino to check active indeces and decide what state to be in . 
 				break;
 				}
 			case btnRIGHT:
@@ -68,6 +75,7 @@ void LcdBoxMenuCtrl::HandleKEyPresses() {
 					}
 				this->_lcd.clear();
 				this->_lcd.setCursor(0, 1);
+				_curStateIndex = (_CurFunction * 12) + IndeciesOfSubFunctionSelections[_CurFunction];
 				this->_lcd.print(this->Functions2DTable[_CurFunction][IndeciesOfSubFunctionSelections[_CurFunction]]);
 				break;
 				}
@@ -80,6 +88,7 @@ void LcdBoxMenuCtrl::HandleKEyPresses() {
 					}
 				this->_lcd.clear();
 				this->_lcd.setCursor(0, 1);
+				_curStateIndex = (_CurFunction * 12) + IndeciesOfSubFunctionSelections[_CurFunction];
 				this->_lcd.print(this->Functions2DTable[_CurFunction][IndeciesOfSubFunctionSelections[_CurFunction]]);
 				break;
 				}
@@ -88,8 +97,13 @@ void LcdBoxMenuCtrl::HandleKEyPresses() {
 				_lock = false;
 				break;
 				}
+
+				return this->_selectPressed;
 		}//xswitch
 	}
+int  LcdBoxMenuCtrl::Get_cuStatIndex() {
+	return this->_curStateIndex;
+	};
 #pragma endregion
 
 int LcdBoxMenuCtrl::ReadKeysNonBlock() {

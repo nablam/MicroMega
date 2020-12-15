@@ -17,6 +17,9 @@
 
 
 #define TotalServos 12
+#define SERVOMIN 1080
+#define SERVOMID 1440
+#define SERVOMAX 1800
 #define DelaySpeed 50
 Servo servo0;               
 Servo servo1;
@@ -34,6 +37,7 @@ Servo servo9;
 Servo servo10;
 Servo servo11;
 Servo ArraServos[12] = { servo0 ,servo1,servo2,servo3,servo4,servo5,servo6,servo7,servo8,servo9,servo10,servo11 };
+int ArraServoValuesBackup[12] = { 0,0,0,0,0,0,0,0,0,0,0,0 };
 int ArraServoPINS[12]=  {22,24,26,23,25,27,28,30,32,29,31,33}; //so that they are lines up by row of gpio ... idk look at pattern dude
 int ArraServoPOSs[12] = {00,00,00,00,00,00,00,00,00,00,00,00};
 bool ServosInitialized = false;
@@ -119,78 +123,11 @@ void setup()
 		ArraServos[s].attach(ArraServoPINS[s]);
 		}
 	_mulcdDrivenMenu =  new LcdBoxMenuCtrl(8, 9, 4, 5, 6, 7);
-
-	}
-void ReadPotpins() {
- 
-// left JS<----------------------
-	 pval8_LS_rot =analogRead(potpin8);//Rotationccw cw 7 -9-10-11 24
-	 pval9_LS_dU =analogRead(potpin9); //downup  508+-4 amplitude 170
-	 pval10_LS_lR =analogRead(potpin10);//rightleft  mid amplitude 170
- 
-	//rightJS-------------------------------->
-	 pval11_RS_uD =analogRead(potpin11);//   512 +-6 amplitude 172
-	 pval12_RS_lR =analogRead(potpin12); //
-	 pval13_RS_rot =analogRead(potpin13);//rot  7-->  14-15-16  --->27
-	}
-void Map01K_update_masterJS() {
-
-// left JS<----------------------
-	pval8_LS_rot = deadzonefilter(map(analogRead(potpin8), 0, 15, 0, PotReadScale),true);
-	pval9_LS_dU = deadzonefilter(map(analogRead(potpin9), 338, 678, 0, PotReadScale),false);
-	pval10_LS_lR = deadzonefilter(map(analogRead(potpin10), 336, 676, 0, PotReadScale), false);
-   //rightJS-------------------------------->
-	pval11_RS_uD = deadzonefilter(map(analogRead(potpin11), 330, 688, 0, PotReadScale), false);
-	pval12_RS_lR = deadzonefilter(map(analogRead(potpin12), 330, 680, 0, PotReadScale), false);
-	pval13_RS_rot = deadzonefilter(map(analogRead(potpin13), 2, 50, 0, PotReadScale),true);
-//	Serial.println(pval11_RS_uD);
-
-	_masterjds.LS_rot = pval8_LS_rot;
-	_masterjds.LS_dU = pval9_LS_dU;
-	_masterjds.LS_lR = pval10_LS_lR;
-
-	_masterjds.RS_uD = pval11_RS_uD;
-	_masterjds.RS_lR = pval12_RS_lR;
-	_masterjds.RS_rot = pval13_RS_rot;
-
-	}
-
-//{pval8_LS_rot} {pval9_LS_dU} {pval10_LS_lR} {pval11_RS_uD} {pval12_RS_lR} {pval13_RS_rot}
- 
-int deadzonefilter(int argval, bool argisRot) {
-
-	if (argisRot) {
-		if ((argval > ((PotReadScale / 2) - (DeadZoneHalfAmplitude/4))) && (argval < ((PotReadScale / 2) + (DeadZoneHalfAmplitude / 4))))
-			argval = (PotReadScale / 2);
-
-		if (argval < 0)argval = 0;
-		if (argval > PotReadScale)argval = PotReadScale;
-
-		}
-	else
-		{
-		if ((argval > ((PotReadScale / 2) - DeadZoneHalfAmplitude)) && (argval < ((PotReadScale / 2) + DeadZoneHalfAmplitude)))
-			argval = (PotReadScale / 2);
-
-		if (argval < 0)argval = 0;
-		if (argval > PotReadScale)argval = PotReadScale;
-		}
-  
-
-	return argval;
+	//TIMSK0 = 0;//stop t/c interupt
 	}
 
 
 
-
-
- 
-void SetAllServosTo(int argmilli) {
-	for (int i = 0; i < TotalServos; i++) {
-		ArraServos[i].writeMicroseconds(argmilli);
-		}
-	}
- 
  
 int p = 1590;
 int temp = 1080;
@@ -229,7 +166,8 @@ void ReadInputRate_sweep_noservomove() {
 	currentValue = currentValue + stepdiff;
 
 	}
-
+bool testboool = false;
+int testint = 0;
 void loop(){
 
 
@@ -241,8 +179,110 @@ void loop(){
 		Map01K_update_masterJS();
    
 		//TASK 2
-		_mulcdDrivenMenu->HandleKEyPresses();
+		  _mulcdDrivenMenu->HandleKEyPresses();
 
+		//if (testboool) {
+		//TASK 3 
+
+			testint = _mulcdDrivenMenu->Get_cuStatIndex();
+		//	}
+
+
+
+		switch (testint) {
+			
+				case 999:
+					break;
+					//minmaxes
+				case 0:
+					Serial.println("zero all");
+					break;
+				case 1:
+					Serial.println("min all");
+					break;
+				case 2:
+					Serial.println("max all");
+					break;
+
+
+
+					//servos
+				case 12:
+					Serial.println("FRL_22");
+					break;
+				case 13:
+					Serial.println("FL1_24");
+					break;
+				case 14:
+					Serial.println("FL2_26");
+					break;
+				case 15:
+					Serial.println("FR0_23");
+					
+					break;
+				case 16:
+					Serial.println("FR1_25");
+					break;
+				case 17:
+					Serial.println("FR2_27");
+					break;
+				case 18:
+					Serial.println("BL0_28");
+					break;
+				case 19:
+					Serial.println("BL1_30");
+					break;
+				case 20:
+					Serial.println("BL2_32");
+					break;
+				case 21:
+					Serial.println("BR0_29");
+					break;
+				case 22:
+					Serial.println("BR1_31");
+					break;
+				case 23:
+					Serial.println("BR2_33");
+					break;
+			
+					//legs
+				case 24:
+					Serial.println("FL");
+					break;
+				case 25:
+					Serial.println("FR");
+					break;
+				case 26:
+					Serial.println("BR");
+					break;
+				case 27:
+					Serial.println("BL");
+					break;
+					//kinematics 12*3
+				case 36:
+					Serial.println("kine pos");
+					break;
+				case 37:
+					Serial.println("kine roll");
+					break;
+					
+					//poses 12*4
+				case 48:
+					Serial.println("walk");
+					break;
+				case 49:
+					Serial.println("side");
+					break;
+				case 50:
+					Serial.println("lay");
+					break;
+				case 51:
+					Serial.println("ready");
+					break;
+
+
+			
+			}
 
 	 // ArraServos[11].writeMicroseconds(map(pval10_LS_lR,0,1000,1080,1880));
 	  // SetAllServosTo(1440);

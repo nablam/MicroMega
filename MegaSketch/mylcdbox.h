@@ -30,7 +30,8 @@ class LcdBoxMenuCtrl {
 
 	LcdBoxMenuCtrl(int rs, int rw);
 	LcdBoxMenuCtrl(int rs, int rw, int enable, int d0, int d1, int d2);
-	void HandleKEyPresses();
+	bool HandleKEyPresses();
+	int Get_cuStatIndex();
 
 	private:
 	LiquidCrystal _lcd;
@@ -38,6 +39,7 @@ class LcdBoxMenuCtrl {
 	int adc_key_in = 0;
 	int _CurFunction = 0; //noting , the next states are explained bellow
 	bool _lock;
+	bool _selectPressed;
 	int ReadKeysNonBlock();
 
  
@@ -45,6 +47,7 @@ class LcdBoxMenuCtrl {
 #pragma region menus
 	int IndeciesOfSubFunctionSelections[MAXFunctions] = { 0,0,0,0,0 };
 	int MaxIndeciesOfSubFunctionSelections[MAXFunctions] = { MAXCALIBS,MAXSERVOS,MAXLEGS,MAXKINEMATICS,MAXPOSES };
+	int _curStateIndex; //= (_CurFunction*12) + index
 	String PageTites[MAXFunctions] = {
 //  "________________"	
 	"0-zero all      ",
