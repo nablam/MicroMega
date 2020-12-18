@@ -18,9 +18,19 @@
 
 #define TotalServos 12
 #define SERVOMIN 1080
-#define SERVOMID 1440
+#define SERVOMID 1600
 #define SERVOMAX 1800
 #define DelaySpeed 50
+
+#define ZEROPOS 1600
+Servo myservo_A;
+Servo myservo_B;
+
+int linecount = 0;
+int posA_input;
+int posB_input;
+String StrInputed = "";
+
 Servo servo0;               
 Servo servo1;
 Servo servo2;
@@ -36,6 +46,14 @@ Servo servo8;
 Servo servo9;
 Servo servo10;
 Servo servo11;
+//Servo servoTestA;
+//Servo servoTestB;
+
+
+//2300 2000 1600 1200    //2000 1600 900
+//     2060 1600 1140    //1140  1600 2060
+//     1350  1350 2350      2350   1350 850
+
 Servo ArraServos[12] = { servo0 ,servo1,servo2,servo3,servo4,servo5,servo6,servo7,servo8,servo9,servo10,servo11 };
 int ArraServoValuesBackup[12] = { 0,0,0,0,0,0,0,0,0,0,0,10 };
 int ArraServoPINS[12]=  {22,24,26,23,25,27,28,30,32,29,31,33}; //so that they are lines up by row of gpio ... idk look at pattern dude
@@ -51,28 +69,25 @@ int ArraServo_MAX[12] = {   1800,1800,1800,
 							1800,1800,1800 };
 
 
-int ArraServo_MID[12] = {  1440,1440,1440,
-							1440,1440,1440,
-							1440,1440,1440,
-							1440,1440,1440 };
+int ArraServo_MID[12] = {  1600,1600,1600,
+							1600,1600,1600,
+							1600,1600,1600,
+							1600,1600,1600 };
 
 
 
-int ArraServo_MINS_v1[12] = { 1080,1080,720,
-							1080,1080,720,
-							1080,1080,720,
-							1080,1080,720 };
-
-int ArraServo_MAX_v1[12] = { 1800,1800,1440,
-							1800,1800,1440,
-							1800,1800,1440,
-							1800,1800,1440 };
+//******************** full range
 
 
-int ArraServo_MID_v1[12] = { 1440,1440,1440,
-							1440,1440,1440,
-							1440,1440,1440,
-							1440,1440,1440 };
+
+
+
+
+
+int ArraServo_MID_v1[12] = { 1600,1600,1600,
+							1600,1600,1600,
+							1600,1600,1600,
+							1600,1600,1600 };
 
 
 
@@ -162,8 +177,15 @@ void setup()
 	for (int s = 0; s < TotalServos; s++) {
 		ArraServos[s].attach(ArraServoPINS[s]);
 		}
+
+	//servoTestA.attach(44);
+	//servoTestB.attach(45,1080,1800);
+
+	myservo_A.attach(44);
+	myservo_B.attach(45);
 	_mulcdDrivenMenu =  new LcdBoxMenuCtrl(8, 9, 4, 5, 6, 7);
 	//TIMSK0 = 0;//stop t/c interupt
+	SetAllServosTo(1600);
 	}
 
 
@@ -171,6 +193,17 @@ void setup()
  
 int p = 1590;
 int temp = 1080;
+
+
+int ArraServo_MINS_v1[12] = { 900,952,240,
+							900,952,240,
+							900,952,240,
+							900,952,240  };
+
+int ArraServo_MAX_v1[12] = { 1980,1936,2640,
+							1980,1936,2640,
+							1980,1936,2640,
+							1980,1936,2640 };
 
 
 
@@ -208,7 +241,7 @@ void ReadInputRate_sweep_noservomove() {
 	}
 bool testboool = false;
 int Mode_fromLcdMenu = 0;
-void loop(){
+void oldloop(){
 
 
 	currentMillis = millis();
@@ -240,7 +273,7 @@ void loop(){
 		//servo1 max 1936
 
 
-		//servo2 min 200
+		//servo2 min 240
 		//
 		//          +1200
 		//
@@ -251,7 +284,132 @@ void loop(){
 		//servo2 max 2640
 
 
-		SetServoToMilis(0, 1980);
+		//SetServoToMilis(0, 1980);
+
+
+		
+		//TASK 1
+		Map01K_update_masterJS();
+
+		//TASK 2
+		  _mulcdDrivenMenu->HandleKEyPresses();
+
+		//if (testboool) {
+		//TASK 3
+
+		  Mode_fromLcdMenu = _mulcdDrivenMenu->Get_cuStatIndex();
+		//	}
+
+
+
+		switch (Mode_fromLcdMenu) {
+
+				case 999:
+					break;
+					//minmaxes
+				case 0:
+					SetAllServosTo(SERVOMID);
+					break;
+				case 1:
+					SetAllServosTo(SERVOMIN + 100);
+					break;
+				case 2:
+					SetAllServosTo(SERVOMAX -100);
+					break;
+
+
+
+					//servos
+				case 12:
+					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12,false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					break;
+				case 13:
+					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12,true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					break;
+				case 14:
+					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12,true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					break;
+				case 15:
+					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+
+					break;
+				case 16:
+					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12,false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					break;
+				case 17:
+					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					break;
+				case 18:
+					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					break;
+				case 19:
+					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					break;
+				case 20:
+					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					break;
+				case 21:
+					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12,true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					break;
+				case 22:
+					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					break;
+				case 23:
+					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					break;
+
+					//legs
+				case 24:
+					MoveShoulderWithJS_v1(Mode_fromLcdMenu - 24,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					break;
+				case 25:
+					MoveShoulderWithJS_v1(Mode_fromLcdMenu - 24,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+
+					break;
+				case 26:
+					MoveShoulderWithJS_v1(Mode_fromLcdMenu - 24,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+
+					break;
+				case 27:
+					MoveShoulderWithJS_v1(Mode_fromLcdMenu - 24,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					break;
+
+
+					//kinematics 12*3
+				case 36:
+					Kinematic_Pos_KneesIN_v1(ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					break;
+				case 37:
+					Kinematic_Pos_KneesOUT_v1(ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					break;
+
+					//poses 12*4
+				case 48:
+					break;
+				case 49:
+					break;
+				case 50:
+					break;
+				case 51:
+					break;
+
+
+
+			}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		/*
 		//TASK 1
@@ -396,3 +554,55 @@ void loop(){
 		}
 
 }
+
+
+int tempint = 2340;
+void loop() {
+
+	while (Serial.available() == 0) {}
+	//tempint = Serial.parseInt();
+	StrInputed = Serial.readString();
+	SerialInputsForA_Bloop();
+
+	//ArraServos[9].writeMicroseconds(tempint);
+	/* for (int i = 0; i < TotalServos; i++) {
+		if(i==5 || i ==11 )
+		ArraServos[i].writeMicroseconds(tempint);
+
+		if (i == 2 || i == 8)
+			ArraServos[i].writeMicroseconds(tempint);
+
+		 
+		}
+
+	Serial.println(tempint);*/
+
+
+	//currentMillis = millis();
+	//if (currentMillis - previousMillis >= 20) {
+
+	//	previousMillis = currentMillis;
+
+
+
+		//while (Serial.available() == 0)
+		//	{
+		//	tempint = Serial.parseInt();
+		//	}
+
+		//
+
+	//while (Serial.available() > 0)
+	//	{
+	//	tempint = Serial.parseInt();
+	//	Serial.print(tempint);
+	//	Serial.println(" degree");
+	//	Serial.print("Enter Position = ");
+	//	}
+	//servoTestA.write(tempint);
+	//delay(15);
+
+		//SetServoToMilis(0, tempint);
+
+//		}
+	}
