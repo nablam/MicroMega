@@ -67,7 +67,7 @@ class LcdBoxMenuCtrl {
 				"!..outofbounds.!"
 			},
 			{
-				"FRL_22  0.. xxxx",
+				"FL0_22  0.. xxxx",
 				"FL1_24  .1. XXXX",
 				"FL2_26  ..2 XXXX",
 				"FR0_23  0.. XXXX",

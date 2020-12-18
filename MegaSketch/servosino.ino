@@ -1,5 +1,13 @@
 
+void SetAllServosToMid() {   
+    for (int s = 0; s < TotalServos; s++) {
+        Sv20kgArra[s]->ZeroMe();
+        }
+    }
+void SetAllServosTo_RelativeMax() {}
+void SetAllServosTo_RelativeMin() {}
 
+/*
 void SetAllServosTo(int argmilli) {
     for (int i = 0; i < TotalServos; i++) {
         int correctedPos = argmilli + ArraServoOffsets[i];
@@ -35,7 +43,7 @@ void MoveServoWithJS(int argPval,int argservoNumber, bool argrev ) {
     ArraServoPOSs[argservoNumber] = correctedPos;
     _mulcdDrivenMenu->OutputServoPOS(correctedPos);
     }
-//FL FR BR BL
+ //FL FR BR BL
 void MoveShoulderWithJS(int argLegNumber) {
     //22       23
     //
@@ -210,3 +218,4 @@ void Kinematic_Pos_KneesOUT_v1(int(&argArraMax)[12], int(&argArraMin)[12]) {
     }
 
 
+*/

@@ -6,6 +6,7 @@
 
 
 //Sample using LiquidCrystal library
+#include "TianKongRC20kg.h"
 #include "mylcdbox.h"
 #include <Servo.h>
 #include <LiquidCrystal.h>
@@ -13,7 +14,7 @@
 //LiquidCrystal ThelcdTeypad(8, 9, 4, 5, 6, 7);
 
 
-#pragma region servo
+#pragma region somevars
 
 
 #define TotalServos 12
@@ -46,54 +47,24 @@ Servo servo8;
 Servo servo9;
 Servo servo10;
 Servo servo11;
-//Servo servoTestA;
-//Servo servoTestB;
-
-
-//2300 2000 1600 1200    //2000 1600 900
-//     2060 1600 1140    //1140  1600 2060
-//     1350  1350 2350      2350   1350 850
 
 Servo ArraServos[12] = { servo0 ,servo1,servo2,servo3,servo4,servo5,servo6,servo7,servo8,servo9,servo10,servo11 };
-int ArraServoValuesBackup[12] = { 0,0,0,0,0,0,0,0,0,0,0,10 };
-int ArraServoPINS[12]=  {22,24,26,23,25,27,28,30,32,29,31,33}; //so that they are lines up by row of gpio ... idk look at pattern dude
-int ArraServoOffsets[12] = {0,0,0,0,0,0,0,0,0,0,0,0};
-int ArraServo_MINS[12] = {  1080,1080,1080,
-							1080,1080,1080, 
-							1080,1080,1080,
-							1080,1080,1080 };
+//							FL      FR       
+//                          BL		BL
+//int ArraServoPINS[12]=  {22,24,26, 23,25,27,
+//						28,30,32,  29,31,33}; //so that they are lines up by row of gpio ... idk look at pattern dude
 
-int ArraServo_MAX[12] = {   1800,1800,1800,
-							1800,1800,1800,
-							1800,1800,1800,
-							1800,1800,1800 };
+Servo20kg* FL0_22;	Servo20kg* FR0_23;
+Servo20kg* FL1_24;	Servo20kg* FR1_25;
+Servo20kg* FL2_26;	Servo20kg* FR2_27;
 
+Servo20kg* BL0_28;	Servo20kg* BR0_29;
+Servo20kg* BL1_30;	Servo20kg* BR1_31;
+Servo20kg* BL2_32;	Servo20kg* BR2_33;
 
-int ArraServo_MID[12] = {  1600,1600,1600,
-							1600,1600,1600,
-							1600,1600,1600,
-							1600,1600,1600 };
+int Mode_fromLcdMenu = 0;
+int tempint = 2340;
 
-
-
-//******************** full range
-
-
-
-
-
-
-
-int ArraServo_MID_v1[12] = { 1600,1600,1600,
-							1600,1600,1600,
-							1600,1600,1600,
-							1600,1600,1600 };
-
-
-
-
-int ArraServoPOSs[12] = {00,00,00,00,00,00,00,00,00,00,00,00};
-bool ServosInitialized = false;
 int curDelay = 20;
 float inputRate;
 float rate;
@@ -131,9 +102,6 @@ int pval10_LS_lR = 0;
 int pval11_RS_uD = 0;
 int pval12_RS_lR = 0;
 int pval13_RS_rot = 0;
-#pragma endregion
-
-
 
 struct JOY_ds {
 	int16_t LS_lR; //pin10
@@ -143,25 +111,18 @@ struct JOY_ds {
 	int16_t LS_rot;//pin8
 	int16_t RS_rot;//pin13
 	};
+
+#pragma endregion
+
 JOY_ds _masterjds;
-
-//*************needMyservoObjects**********
-
-//**************Leg servo poses in ms****************
-struct LEG_ds {
-	int16_t hip;
-	int16_t shoulder;
-	int16_t elbow;
-	};
-
-LEG_ds Leg_FR;
-LEG_ds Leg_FL;
-LEG_ds Leg_BR;
-LEG_ds Leg_BL;
-
 
 LcdBoxMenuCtrl* _mulcdDrivenMenu;// = LcdBoxMenuCtrl(8, 9, 4, 5, 6, 7);
 
+Servo20kg* Sv20kgArra[MAXSERVOS] = { FL0_22,FL1_24,FL2_26,FR0_23,FR1_25,FR2_27,BL0_28, BL1_30, BL2_32, BR0_29,BR1_31,BR2_33 };
+
+Servo20kg* Sv20kg_Shoulders_Arra[4] = { FL0_22,FR0_23,BL0_28,BR0_29 };
+Servo20kg* Sv20kg_Arms_Top[4] = { FL1_24,FR1_25,BL1_30,BR1_31 };
+Servo20kg* Sv20kg_Arms_Low[4] = { FL2_26,FR2_27,BL2_32,BR2_33 };
 
 void setup()
 	{
@@ -172,76 +133,31 @@ void setup()
 	pinMode(potpin11, INPUT);
 	pinMode(potpin12, INPUT);
 	pinMode(potpin13, INPUT);
-	
+	//2300 2000 1600 1200    //2000 1600 1200  +900
+//     2060 1600 1140    //1140  1600 2060
+//     1350  1350 2350      2350   1350 850
+
+	 FL0_22= new Servo20kg(servo0,22,0,1200,1600,2000, false);	 FR0_23= new Servo20kg(servo3,23,3,1200,1600,2000,true);
+	 FL1_24= new Servo20kg(servo1,24,1,1140,1600,2060,false);	 FR1_25= new Servo20kg(servo4,25,4,1140,1600,2060,true);
+	 FL2_26= new Servo20kg(servo2,26,2,850,1350,2350,false);	 FR2_27= new Servo20kg(servo5 ,27,5,850,1350,2350,false);
+
+	 BL0_28= new Servo20kg(servo6,28,6,1200,1600,2000,false);	 BR0_29= new Servo20kg(servo9,29,9,1200,1600,2000,true);
+	 BL1_30= new Servo20kg(servo7,30,7,1440,1600,2060,false);	 BR1_31= new Servo20kg(servo10,31,10,1140,1600,2060,true);
+	 BL2_32= new Servo20kg(servo8,32,8,850,1350,2350,false);	 BR2_33= new Servo20kg(servo11,33,11,850,1350,2350,false);
 
 	for (int s = 0; s < TotalServos; s++) {
-		ArraServos[s].attach(ArraServoPINS[s]);
+		Sv20kgArra[s]->AttachMe();
 		}
 
-	//servoTestA.attach(44);
-	//servoTestB.attach(45,1080,1800);
-
-	myservo_A.attach(44);
-	myservo_B.attach(45);
 	_mulcdDrivenMenu =  new LcdBoxMenuCtrl(8, 9, 4, 5, 6, 7);
 	//TIMSK0 = 0;//stop t/c interupt
-	SetAllServosTo(1600);
-	}
-
-
-
- 
-int p = 1590;
-int temp = 1080;
-
-
-int ArraServo_MINS_v1[12] = { 900,952,240,
-							900,952,240,
-							900,952,240,
-							900,952,240  };
-
-int ArraServo_MAX_v1[12] = { 1980,1936,2640,
-							1980,1936,2640,
-							1980,1936,2640,
-							1980,1936,2640 };
-
-
-
-
-void ReadInputRate_sweep_noservomove() {
-
-	inputRate = map(pval11_RS_uD, 0, 1000, 1, 10);;// pval11_RS_uD;//
-	rate = inputRate;
-
-
-	if (state == 0) {
-		targetValue = 1080; //lowend
-		if (currentValue <= targetValue) {
-			state = 1;
-			prevTargetValue = targetValue;
-			currentValue = targetValue;
-//Serial.println("on ");
-			}
-		}
-   // else 
-	if (state == 1)
-		{
-		targetValue = 1880; //highend
-		if (currentValue >= targetValue) {
-			state = 0;
-			prevTargetValue = targetValue;
-			currentValue = targetValue;
-//			   Serial.print("off");
-			}
-		}
-
-	stepdiff = (targetValue - prevTargetValue) / (28 * rate);
-	currentValue = currentValue + stepdiff;
+    
+	SetAllServosToMid();
 
 	}
-bool testboool = false;
-int Mode_fromLcdMenu = 0;
-void oldloop(){
+
+
+void RunTasks(){
 
 
 	currentMillis = millis();
@@ -308,79 +224,79 @@ void oldloop(){
 					break;
 					//minmaxes
 				case 0:
-					SetAllServosTo(SERVOMID);
+					// // SetAllServosTo(SERVOMID);
 					break;
 				case 1:
-					SetAllServosTo(SERVOMIN + 100);
+					// // SetAllServosTo(SERVOMIN + 100);
 					break;
 				case 2:
-					SetAllServosTo(SERVOMAX -100);
+					// // SetAllServosTo(SERVOMAX -100);
 					break;
 
 
 
 					//servos
 				case 12:
-					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12,false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12,false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
 					break;
 				case 13:
-					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12,true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12,true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
 					break;
 				case 14:
-					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12,true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12,true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
 					break;
 				case 15:
-					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
 
 					break;
 				case 16:
-					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12,false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12,false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
 					break;
 				case 17:
-					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
 					break;
 				case 18:
-					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
 					break;
 				case 19:
-					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
 					break;
 				case 20:
-					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
 					break;
 				case 21:
-					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12,true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12,true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
 					break;
 				case 22:
-					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
 					break;
 				case 23:
-					MoveServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
 					break;
 
 					//legs
 				case 24:
-					MoveShoulderWithJS_v1(Mode_fromLcdMenu - 24,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					// MoveeShoulderWithJS_v1(Mode_fromLcdMenu - 24,ArraServo_MINS_v1 , ArraServo_MAX_v1);
 					break;
 				case 25:
-					MoveShoulderWithJS_v1(Mode_fromLcdMenu - 24,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					// MoveeShoulderWithJS_v1(Mode_fromLcdMenu - 24,ArraServo_MINS_v1 , ArraServo_MAX_v1);
 
 					break;
 				case 26:
-					MoveShoulderWithJS_v1(Mode_fromLcdMenu - 24,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					// MoveeShoulderWithJS_v1(Mode_fromLcdMenu - 24,ArraServo_MINS_v1 , ArraServo_MAX_v1);
 
 					break;
 				case 27:
-					MoveShoulderWithJS_v1(Mode_fromLcdMenu - 24,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					// MoveeShoulderWithJS_v1(Mode_fromLcdMenu - 24,ArraServo_MINS_v1 , ArraServo_MAX_v1);
 					break;
 
 
-					//kinematics 12*3
+					//// Kinematics 12*3
 				case 36:
-					Kinematic_Pos_KneesIN_v1(ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					// Kinematic_Pos_KneesIN_v1(ArraServo_MINS_v1 , ArraServo_MAX_v1);
 					break;
 				case 37:
-					Kinematic_Pos_KneesOUT_v1(ArraServo_MINS_v1 , ArraServo_MAX_v1);
+					// Kinematic_Pos_KneesOUT_v1(ArraServo_MINS_v1 , ArraServo_MAX_v1);
 					break;
 
 					//poses 12*4
@@ -556,53 +472,8 @@ void oldloop(){
 }
 
 
-int tempint = 2340;
+
 void loop() {
 
-	while (Serial.available() == 0) {}
-	//tempint = Serial.parseInt();
-	StrInputed = Serial.readString();
-	SerialInputsForA_Bloop();
 
-	//ArraServos[9].writeMicroseconds(tempint);
-	/* for (int i = 0; i < TotalServos; i++) {
-		if(i==5 || i ==11 )
-		ArraServos[i].writeMicroseconds(tempint);
-
-		if (i == 2 || i == 8)
-			ArraServos[i].writeMicroseconds(tempint);
-
-		 
-		}
-
-	Serial.println(tempint);*/
-
-
-	//currentMillis = millis();
-	//if (currentMillis - previousMillis >= 20) {
-
-	//	previousMillis = currentMillis;
-
-
-
-		//while (Serial.available() == 0)
-		//	{
-		//	tempint = Serial.parseInt();
-		//	}
-
-		//
-
-	//while (Serial.available() > 0)
-	//	{
-	//	tempint = Serial.parseInt();
-	//	Serial.print(tempint);
-	//	Serial.println(" degree");
-	//	Serial.print("Enter Position = ");
-	//	}
-	//servoTestA.write(tempint);
-	//delay(15);
-
-		//SetServoToMilis(0, tempint);
-
-//		}
 	}
