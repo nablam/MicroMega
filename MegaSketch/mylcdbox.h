@@ -15,11 +15,9 @@ class LcdBoxMenuCtrl {
 	public:
 #define MAXFunctions 5
 #define MAXCALIBS 3
-#define MAXSERVOS 12
-#define MAXLEGS 4
 #define MAXKINEMATICS 2
 #define MAXPOSES 4
-
+#define TotalLEgsLcd 4
 #define btnRIGHT 0
 #define btnRIGHT 0
 #define btnUP 1
@@ -47,7 +45,7 @@ class LcdBoxMenuCtrl {
 
 #pragma region menus
 	int IndeciesOfSubFunctionSelections[MAXFunctions] = { 0,0,0,0,0 };
-	int MaxIndeciesOfSubFunctionSelections[MAXFunctions] = { MAXCALIBS,MAXSERVOS,MAXLEGS,MAXKINEMATICS,MAXPOSES };
+	int MaxIndeciesOfSubFunctionSelections[MAXFunctions] = { MAXCALIBS,12,TotalLEgsLcd,MAXKINEMATICS,MAXPOSES };
 	int _curStateIndex; //= (_CurFunction*12) + index
 	String PageTites[MAXFunctions] = {
 //  "________________"	
@@ -84,8 +82,8 @@ class LcdBoxMenuCtrl {
 			 {
 				"FLz=.. x=.. y=..",
 				"FRz=.. x=.. y=..",
-				"BRz=.. x=.. y=..",
 				"BLz=.. x=.. y=..",
+				"BRz=.. x=.. y=..",
 				"!..outofbounds.!",
 			},
 		   {

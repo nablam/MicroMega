@@ -21,8 +21,8 @@
     </None>
     <None Include="servosino.ino" />
     <None Include="lcdino.ino" />
-    <None Include="DataStructinos.ino" />
     <None Include="PotsCTRLINO.ino" />
+    <None Include="ABservoTester.ino" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.MegaSketch.vsarduino.h">
@@ -31,9 +31,15 @@
     <ClInclude Include="mylcdbox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TianKongRC20kg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mylcdbox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TianKongRC20kg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

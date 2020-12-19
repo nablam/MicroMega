@@ -17,7 +17,11 @@
 #pragma region somevars
 
 
-#define TotalServos 12
+//#define TotalServos 12
+#define TOTALSERVOS 12
+#define TOTALLEGS 4
+
+
 #define SERVOMIN 1080
 #define SERVOMID 1600
 #define SERVOMAX 1800
@@ -54,13 +58,22 @@ Servo ArraServos[12] = { servo0 ,servo1,servo2,servo3,servo4,servo5,servo6,servo
 //int ArraServoPINS[12]=  {22,24,26, 23,25,27,
 //						28,30,32,  29,31,33}; //so that they are lines up by row of gpio ... idk look at pattern dude
 
-Servo20kg* FL0_22;	Servo20kg* FR0_23;
-Servo20kg* FL1_24;	Servo20kg* FR1_25;
-Servo20kg* FL2_26;	Servo20kg* FR2_27;
+//Servo20kg* FL0_22;	Servo20kg* FR0_23;
+//Servo20kg* FL1_24;	Servo20kg* FR1_25;
+//Servo20kg* FL2_26;	Servo20kg* FR2_27;
+//
+//Servo20kg* BL0_28;	Servo20kg* BR0_29;
+//Servo20kg* BL1_30;	Servo20kg* BR1_31;
+//Servo20kg* BL2_32;	Servo20kg* BR2_33;
 
-Servo20kg* BL0_28;	Servo20kg* BR0_29;
-Servo20kg* BL1_30;	Servo20kg* BR1_31;
-Servo20kg* BL2_32;	Servo20kg* BR2_33;
+Servo20kg* FL0_22 = new Servo20kg(servo0, 22, 0, 1200, 1600, 2000, false);	 Servo20kg* FR0_23 = new Servo20kg(servo3, 23, 3, 1200, 1600, 2000, true);
+Servo20kg* FL1_24 = new Servo20kg(servo1, 24, 1, 1140, 1600, 2060, true);	 Servo20kg* FR1_25 = new Servo20kg(servo4, 25, 4, 1140, 1600, 2060, false);
+Servo20kg* FL2_26 = new Servo20kg(servo2, 26, 2, 1350, 1850, 2350, false);	 Servo20kg* FR2_27 = new Servo20kg(servo5, 27, 5, 1350, 1850, 2350, false);
+
+Servo20kg* BL0_28 = new Servo20kg(servo6, 28, 6, 1200, 1600, 2000, false);	 Servo20kg* BR0_29 = new Servo20kg(servo9, 29, 9, 1200, 1600, 2000, true);
+Servo20kg* BL1_30 = new Servo20kg(servo7, 30, 7, 1140, 1600, 2060, false);	 Servo20kg* BR1_31 = new Servo20kg(servo10, 31, 10, 1140, 1600, 2060, true);
+Servo20kg* BL2_32 = new Servo20kg(servo8, 32, 8, 1350, 1850, 2350, false);	 Servo20kg* BR2_33 = new Servo20kg(servo11, 33, 11, 1350, 1850, 2350, false);
+
 
 int Mode_fromLcdMenu = 0;
 int tempint = 2340;
@@ -118,7 +131,7 @@ JOY_ds _masterjds;
 
 LcdBoxMenuCtrl* _mulcdDrivenMenu;// = LcdBoxMenuCtrl(8, 9, 4, 5, 6, 7);
 
-Servo20kg* Sv20kgArra[MAXSERVOS] = { FL0_22,FL1_24,FL2_26,FR0_23,FR1_25,FR2_27,BL0_28, BL1_30, BL2_32, BR0_29,BR1_31,BR2_33 };
+Servo20kg* Sv20kgArra[TOTALSERVOS] = { FL0_22,FL1_24,FL2_26,FR0_23,FR1_25,FR2_27,BL0_28, BL1_30, BL2_32, BR0_29,BR1_31,BR2_33 };
 
 Servo20kg* Sv20kg_Shoulders_Arra[4] = { FL0_22,FR0_23,BL0_28,BR0_29 };
 Servo20kg* Sv20kg_Arms_Top[4] = { FL1_24,FR1_25,BL1_30,BR1_31 };
@@ -137,21 +150,14 @@ void setup()
 //     2060 1600 1140    //1140  1600 2060
 //     1350  1350 2350      2350   1350 850
 
-	 FL0_22= new Servo20kg(servo0,22,0,1200,1600,2000, false);	 FR0_23= new Servo20kg(servo3,23,3,1200,1600,2000,true);
-	 FL1_24= new Servo20kg(servo1,24,1,1140,1600,2060,false);	 FR1_25= new Servo20kg(servo4,25,4,1140,1600,2060,true);
-	 FL2_26= new Servo20kg(servo2,26,2,850,1350,2350,false);	 FR2_27= new Servo20kg(servo5 ,27,5,850,1350,2350,false);
-
-	 BL0_28= new Servo20kg(servo6,28,6,1200,1600,2000,false);	 BR0_29= new Servo20kg(servo9,29,9,1200,1600,2000,true);
-	 BL1_30= new Servo20kg(servo7,30,7,1440,1600,2060,false);	 BR1_31= new Servo20kg(servo10,31,10,1140,1600,2060,true);
-	 BL2_32= new Servo20kg(servo8,32,8,850,1350,2350,false);	 BR2_33= new Servo20kg(servo11,33,11,850,1350,2350,false);
-
-	for (int s = 0; s < TotalServos; s++) {
+	// delay(500);
+	for (int s = 0; s < TOTALSERVOS; s++) {
 		Sv20kgArra[s]->AttachMe();
 		}
 
 	_mulcdDrivenMenu =  new LcdBoxMenuCtrl(8, 9, 4, 5, 6, 7);
 	//TIMSK0 = 0;//stop t/c interupt
-    
+	
 	SetAllServosToMid();
 
 	}
@@ -165,48 +171,10 @@ void RunTasks(){
 		
 		previousMillis = currentMillis;
 
-
-		//servo0 min 900
-		//
-		//          +540
-		//
-		//   mid 1440
-		//
-		//           +540
-		//
-		//servo0 max 1980
-
-		
-		
-		//servo1 min 952
-		//
-		//          +488
-		//
-		//   mid 1440
-		//
-		//           +488
-		//
-		//servo1 max 1936
-
-
-		//servo2 min 240
-		//
-		//          +1200
-		//
-		//   mid 1440
-		//
-		//           +1200
-		//
-		//servo2 max 2640
-
-
-		//SetServoToMilis(0, 1980);
-
-
 		
 		//TASK 1
 		Map01K_update_masterJS();
-
+		//Sv20kgArra[7]->Rotate_Us_RelativeToMid(pval10_LS_lR);
 		//TASK 2
 		  _mulcdDrivenMenu->HandleKEyPresses();
 
@@ -217,101 +185,8 @@ void RunTasks(){
 		//	}
 
 
-
-		switch (Mode_fromLcdMenu) {
-
-				case 999:
-					break;
-					//minmaxes
-				case 0:
-					// // SetAllServosTo(SERVOMID);
-					break;
-				case 1:
-					// // SetAllServosTo(SERVOMIN + 100);
-					break;
-				case 2:
-					// // SetAllServosTo(SERVOMAX -100);
-					break;
-
-
-
-					//servos
-				case 12:
-					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12,false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
-					break;
-				case 13:
-					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12,true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
-					break;
-				case 14:
-					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12,true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
-					break;
-				case 15:
-					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
-
-					break;
-				case 16:
-					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12,false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
-					break;
-				case 17:
-					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
-					break;
-				case 18:
-					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
-					break;
-				case 19:
-					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
-					break;
-				case 20:
-					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
-					break;
-				case 21:
-					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12,true,ArraServo_MINS_v1 , ArraServo_MAX_v1);
-					break;
-				case 22:
-					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
-					break;
-				case 23:
-					// MoveeServoWithJS_v1(pval10_LS_lR, Mode_fromLcdMenu - 12, false,ArraServo_MINS_v1 , ArraServo_MAX_v1);
-					break;
-
-					//legs
-				case 24:
-					// MoveeShoulderWithJS_v1(Mode_fromLcdMenu - 24,ArraServo_MINS_v1 , ArraServo_MAX_v1);
-					break;
-				case 25:
-					// MoveeShoulderWithJS_v1(Mode_fromLcdMenu - 24,ArraServo_MINS_v1 , ArraServo_MAX_v1);
-
-					break;
-				case 26:
-					// MoveeShoulderWithJS_v1(Mode_fromLcdMenu - 24,ArraServo_MINS_v1 , ArraServo_MAX_v1);
-
-					break;
-				case 27:
-					// MoveeShoulderWithJS_v1(Mode_fromLcdMenu - 24,ArraServo_MINS_v1 , ArraServo_MAX_v1);
-					break;
-
-
-					//// Kinematics 12*3
-				case 36:
-					// Kinematic_Pos_KneesIN_v1(ArraServo_MINS_v1 , ArraServo_MAX_v1);
-					break;
-				case 37:
-					// Kinematic_Pos_KneesOUT_v1(ArraServo_MINS_v1 , ArraServo_MAX_v1);
-					break;
-
-					//poses 12*4
-				case 48:
-					break;
-				case 49:
-					break;
-				case 50:
-					break;
-				case 51:
-					break;
-
-
-
-			}
+		  //TASK 4
+		DoSwitch(Mode_fromLcdMenu);
 
 
 
@@ -321,147 +196,6 @@ void RunTasks(){
 
 
 
-
-
-
-
-
-
-		/*
-		//TASK 1
-		Map01K_update_masterJS();
-   
-		//TASK 2
-		  _mulcdDrivenMenu->HandleKEyPresses();
-
-		//if (testboool) {
-		//TASK 3 
-
-		  Mode_fromLcdMenu = _mulcdDrivenMenu->Get_cuStatIndex();
-		//	}
-
-
-
-		switch (Mode_fromLcdMenu) {
-			
-				case 999:
-					break;
-					//minmaxes
-				case 0:
-					//Serial.println("zero all");
-					SetAllServosTo(SERVOMID);
-					break;
-				case 1:
-				//	Serial.println("min all");
-					SetAllServosTo(SERVOMIN + 100);
-					break;
-				case 2:
-					//Serial.println("max all");
-					SetAllServosTo(SERVOMAX -100);
-					break;
-
-
-
-					//servos
-				case 12:
-					//Serial.println("FRL_22");
-					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12,false);
-					break;
-				case 13:
-					//Serial.println("FL1_24");
-					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12,true);
-					break;
-				case 14:
-					//Serial.println("FL2_26");
-					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12,true);
-					break;
-				case 15:
-					//Serial.println("FR0_23");
-					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12, false);
-					
-					break;
-				case 16:
-					//Serial.println("FR1_25");
-					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12,false);
-					break;
-				case 17:
-					//Serial.println("FR2_27");
-					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12, false);
-					break;
-				case 18:
-					//Serial.println("BL0_28");
-					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12, true);
-					break;
-				case 19:
-					//Serial.println("BL1_30");
-					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12, true);
-					break;
-				case 20:
-					//Serial.println("BL2_32");
-					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12, true);
-					break;
-				case 21:
-					//Serial.println("BR0_29");
-					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12,true);
-					break;
-				case 22:
-					//Serial.println("BR1_31");
-					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12, false);
-					break;
-				case 23:
-					//Serial.println("BR2_33");
-					MoveServoWithJS(pval10_LS_lR, Mode_fromLcdMenu - 12, false);
-					break;
-			
-					//legs
-				case 24:
-					//Serial.println("FL");
-					MoveShoulderWithJS(Mode_fromLcdMenu - 24);
-					break;
-				case 25:
-					//Serial.println("FR");
-					MoveShoulderWithJS(Mode_fromLcdMenu - 24);
-
-					break;
-				case 26:
-					//Serial.println("BR");
-					MoveShoulderWithJS(Mode_fromLcdMenu - 24);
-
-					break;
-				case 27:
-					//Serial.println("BL");
-					MoveShoulderWithJS(Mode_fromLcdMenu - 24);
-					break;
-
-
-					//kinematics 12*3
-				case 36:
-					//Serial.println("kine pos");
-					Kinematic_Pos_KneesIN();
-					break;
-				case 37:
-					//Serial.println("kine roll");
-					Kinematic_Pos_KneesOUT();
-					break;
-					
-					//poses 12*4
-				case 48:
-					//Serial.println("walk");
-					break;
-				case 49:
-					//Serial.println("side");
-					break;
-				case 50:
-					//Serial.println("lay");
-					break;
-				case 51:
-					//Serial.println("ready");
-					break;
-
-
-			
-			}
-			*/
 
 	 // ArraServos[11].writeMicroseconds(map(pval10_LS_lR,0,1000,1080,1880));
 	  // SetAllServosTo(1440);
@@ -471,9 +205,216 @@ void RunTasks(){
 
 }
 
+void DoSwitch(int argFromLcd) {
+	
 
 
-void loop() {
+	switch (argFromLcd) {
+
+			case 999:
+				break;
+				//minmaxes
+			case 0:
+				SetAllServosToMid();
+				break;
+			case 1:
+				SetAllServosToMid();
+				break;
+			case 2:
+				SetAllServosToMid();
+				break;
+
+
+				//servos
+			case 12:
+				Sv20kgArra[Mode_fromLcdMenu - TOTALSERVOS]->Rotate_Us_RelativeToMid(pval10_LS_lR);
+				break;
+			case 13:
+				Sv20kgArra[Mode_fromLcdMenu - TOTALSERVOS]->Rotate_Us_RelativeToMid(pval10_LS_lR);
+				break;
+			case 14:
+				Sv20kgArra[Mode_fromLcdMenu - TOTALSERVOS]->Rotate_Us_RelativeToMid(pval10_LS_lR);
+				break;
+			case 15:
+				Sv20kgArra[Mode_fromLcdMenu - TOTALSERVOS]->Rotate_Us_RelativeToMid(pval10_LS_lR);
+
+				break;
+			case 16:
+				Sv20kgArra[Mode_fromLcdMenu - TOTALSERVOS]->Rotate_Us_RelativeToMid(pval10_LS_lR);
+				break;
+			case 17:
+				Sv20kgArra[Mode_fromLcdMenu - TOTALSERVOS]->Rotate_Us_RelativeToMid(pval10_LS_lR);
+				break;
+			case 18:
+				Sv20kgArra[Mode_fromLcdMenu - TOTALSERVOS]->Rotate_Us_RelativeToMid(pval10_LS_lR);
+				break;
+			case 19:
+				Sv20kgArra[Mode_fromLcdMenu - TOTALSERVOS]->Rotate_Us_RelativeToMid(pval10_LS_lR);
+				break;
+			case 20:
+				Sv20kgArra[Mode_fromLcdMenu - TOTALSERVOS]->Rotate_Us_RelativeToMid(pval10_LS_lR);
+				break;
+			case 21:
+				Sv20kgArra[Mode_fromLcdMenu - TOTALSERVOS]->Rotate_Us_RelativeToMid(pval10_LS_lR);
+				break;
+			case 22:
+				Sv20kgArra[Mode_fromLcdMenu - TOTALSERVOS]->Rotate_Us_RelativeToMid(pval10_LS_lR);
+				break;
+			case 23:
+				Sv20kgArra[Mode_fromLcdMenu - TOTALSERVOS]->Rotate_Us_RelativeToMid(pval10_LS_lR);
+				break;
+
+
+
+
+
+
+
+				//legs
+			case 24:
+				SetAllServosToMid();
+				// MoveeShoulderWithJS_v1(Mode_fromLcdMenu - 24,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+				break;
+			case 25:
+				// MoveeShoulderWithJS_v1(Mode_fromLcdMenu - 24,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+
+				break;
+			case 26:
+				// MoveeShoulderWithJS_v1(Mode_fromLcdMenu - 24,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+
+				break;
+			case 27:
+				// MoveeShoulderWithJS_v1(Mode_fromLcdMenu - 24,ArraServo_MINS_v1 , ArraServo_MAX_v1);
+				break;
+
+
+				//// Kinematics 12*3
+			case 36:
+
+				Sv20kgArra[1]->RotateHalf_Us_RelativeToMid(pval9_LS_dU);
+				Sv20kgArra[2]->Rotate_Us_RelativeToMid(pval9_LS_dU);
+
+				Sv20kgArra[4]->RotateHalf_Us_RelativeToMid(pval9_LS_dU);
+				Sv20kgArra[5]->Rotate_Us_RelativeToMid(pval9_LS_dU);
+
+				Sv20kgArra[7]->RotateHalf_Us_RelativeToMid(pval9_LS_dU);
+				Sv20kgArra[8]->Rotate_Us_RelativeToMid(pval9_LS_dU);
+
+				Sv20kgArra[10]->RotateHalf_Us_RelativeToMid(pval9_LS_dU);
+				Sv20kgArra[11]->Rotate_Us_RelativeToMid(pval9_LS_dU);
+				// Kinematic_Pos_KneesIN_v1(ArraServo_MINS_v1 , ArraServo_MAX_v1);
+				break;
+			case 37:
+				//use 2 sticks o control front back lift
+				Sv20kgArra[1]->RotateHalf_Us_RelativeToMid(pval10_LS_lR);
+				Sv20kgArra[2]->Rotate_Us_RelativeToMid(pval10_LS_lR);
+
+				Sv20kgArra[4]->RotateHalf_Us_RelativeToMid(pval10_LS_lR);
+				Sv20kgArra[5]->Rotate_Us_RelativeToMid(pval10_LS_lR);
+
+				Sv20kgArra[7]->RotateHalf_Us_RelativeToMid(pval12_RS_lR);
+				Sv20kgArra[8]->Rotate_Us_RelativeToMid(pval12_RS_lR);
+
+				Sv20kgArra[10]->RotateHalf_Us_RelativeToMid(pval12_RS_lR);
+				Sv20kgArra[11]->Rotate_Us_RelativeToMid(pval12_RS_lR);
+				// Kinematic_Pos_KneesOUT_v1(ArraServo_MINS_v1 , ArraServo_MAX_v1);
+				break;
+
+				//poses 12*4
+			case 48:
+				break;
+			case 49:
+				break;
+			case 50:
+				break;
+			case 51:
+				break;
+
+
+
+		}
 
 
 	}
+
+void loop() {
+	
+	 RunTasks();
+	}
+
+#pragma region teststuff
+void betterSwitch() {
+	  //case 0 1 2   allzero allmin allmax
+	if (Mode_fromLcdMenu < 3) {
+		switch (Mode_fromLcdMenu) {
+
+					//minmaxes
+				case 0:
+					SetAllServosToMid();
+					break;
+				case 1:
+					SetAllServosToMid();
+					break;
+				case 2:
+					SetAllServosToMid();
+					break;
+			}
+
+
+		}
+	else
+	//case 12 -> 23 
+	// use index 0 -12
+		if (Mode_fromLcdMenu >= TOTALSERVOS && Mode_fromLcdMenu < (TOTALSERVOS + TOTALSERVOS)) {
+
+			Sv20kgArra[Mode_fromLcdMenu - TOTALSERVOS]->Rotate_Us_RelativeToMid(pval11_RS_uD);
+			}
+		else
+		  // 24 25 26 27
+		  // FL FR BL BR
+			if (Mode_fromLcdMenu >= (TOTALSERVOS + TOTALSERVOS) && Mode_fromLcdMenu < (TOTALSERVOS + TOTALSERVOS + TOTALLEGS)) {
+				if (Mode_fromLcdMenu % 3 == 0) {
+					}
+				else if (Mode_fromLcdMenu % 3 == 1) {
+					}
+				else if (Mode_fromLcdMenu % 3 == 2) {
+					}
+				else
+					{
+					}
+
+				}
+
+
+	}
+
+
+typedef void (*GenericFP)(int); //function pointer prototype to a function which takes an 'int' an returns 'void'
+
+void Page1(int foo)
+	{
+	Serial.print("Page1=");
+	Serial.println(foo);
+	}
+
+void Page2(int foo)
+	{
+	Serial.print("Page2=");
+	Serial.println(foo);
+	}
+
+void Page3(int foo)
+	{
+	Serial.print("Page3=");
+	Serial.println(foo);
+	}
+GenericFP MenuFP[3] = { &Page1, &Page2, &Page3 }; //create an array of 'GenericFP' function pointers. Notice the '&' operator
+
+void daloop()
+	{
+	MenuFP[0](1); //call MenuFP element 0 with the parameter 1.  This is equivalent to: Page1(1)
+	MenuFP[1](5); //call MenuFP element 1 with the parameter 5.  This is equivalent to: Page2(5)
+	MenuFP[2](7); //and so on.                                   This is equivalent to: Page3(7)
+	}
+
+#pragma endregion

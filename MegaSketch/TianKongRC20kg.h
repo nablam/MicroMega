@@ -17,6 +17,7 @@ class Servo20kg {
 	void AttachMe();
 	void ZeroMe();
 	void Rotate_Us_RelativeToMid(int agPotValue);//Pot outputs 0 -500- 1000
+	void RotateHalf_Us_RelativeToMid(int agPotValue);//Pot outputs 0 -500- 1000
 
 	private:
 	Servo _servo;

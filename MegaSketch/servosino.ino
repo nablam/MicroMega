@@ -1,11 +1,11 @@
 
 void SetAllServosToMid() {   
-    for (int s = 0; s < TotalServos; s++) {
+    for (int s = 0; s < TOTALSERVOS; s++) {
         Sv20kgArra[s]->ZeroMe();
         }
     }
-void SetAllServosTo_RelativeMax() {}
-void SetAllServosTo_RelativeMin() {}
+void SetCrouchPose() {}
+void SetStanPose() {}
 
 /*
 void SetAllServosTo(int argmilli) {

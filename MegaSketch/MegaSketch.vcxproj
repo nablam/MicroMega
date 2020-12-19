@@ -110,7 +110,7 @@
     <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="DataStructinos.ino">
+    <None Include="ABservoTester.ino">
       <FileType>CppCode</FileType>
     </None>
     <None Include="lcdino.ino">
@@ -132,10 +132,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mylcdbox.h" />
+    <ClInclude Include="TianKongRC20kg.h" />
     <ClInclude Include="__vm\.MegaSketch.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mylcdbox.cpp" />
+    <ClCompile Include="TianKongRC20kg.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
