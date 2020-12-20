@@ -27,8 +27,8 @@ String getValue(String data, char separator, int index)
 
 
 void SerialInputsForA_Bloop() {
-    String part01 = getValue(StrInputed, ',', 0);
-    String part02 = getValue(StrInputed, ',', 1);
+    String part01 = getValue(StrInputed_MegaSketch, ',', 0);
+    String part02 = getValue(StrInputed_MegaSketch, ',', 1);
     //String part03 = getValue(StrInputed,';',2);
 
     if (part01.equalsIgnoreCase("nogo") && part02.equalsIgnoreCase("nogo")) {
@@ -47,7 +47,7 @@ void SerialInputsForA_Bloop() {
                 }
             }
 
-    linecount++;
+    linecount_MegaSketch++;
 
     posA_input = part01.toInt();
 
@@ -58,7 +58,7 @@ void SerialInputsForA_Bloop() {
     //Serial.print(part02);
     //Serial.print(posA_input+posB_input);
     //Serial.println("-- ");
-    Serial.print(linecount);
+    Serial.print(linecount_MegaSketch);
     Serial.print("  |");
     Serial.print("svrA= ");
     Serial.print(posA_input);
@@ -66,13 +66,15 @@ void SerialInputsForA_Bloop() {
     Serial.print("svrB= ");
     Serial.print(posB_input);
     Serial.println("-- -- -- ");
+
+    //Sv20kgArra[2]->SetAngleDegrees(posA_input);
     //posA_input= Serial.parseInt();
     //posB_input= Serial.parseInt();
 
-    myservo_A.writeMicroseconds(posA_input);
-    myservo_B.writeMicroseconds(posB_input);
-    Serial.println(myservo_A.read());
-    Serial.println("-- ");
+    //myservo_A.writeMicroseconds(posA_input);
+    //myservo_B.writeMicroseconds(posB_input);
+    //Serial.println(myservo_A.read());
+    //Serial.println("-- ");
     }
 //
 //void loop() {

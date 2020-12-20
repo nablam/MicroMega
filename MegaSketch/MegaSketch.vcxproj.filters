@@ -23,6 +23,8 @@
     <None Include="lcdino.ino" />
     <None Include="PotsCTRLINO.ino" />
     <None Include="ABservoTester.ino" />
+    <None Include="ReadSerialInputs.ino" />
+    <None Include="MyKinematics.ino" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.MegaSketch.vsarduino.h">

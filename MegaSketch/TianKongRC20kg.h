@@ -15,12 +15,20 @@ class Servo20kg {
 	public:
 	Servo20kg(Servo argServo, int argPin, int argIndex, int argMin, int argMid, int argMax, bool argIsReversed);
 	void AttachMe();
-	void ZeroMe();
+	void ZeroMe();//0
 	void Rotate_Us_RelativeToMid(int agPotValue);//Pot outputs 0 -500- 1000
 	void RotateHalf_Us_RelativeToMid(int agPotValue);//Pot outputs 0 -500- 1000
 
+
+	void SetAngleDegrees_ScaleFactor1p5(int argAngle);
+	void SetUs(int argPuls);
+	void SetAngleDegrees_toUS_noscale(int argAngle);
+		
+	void Dispatch_TestFunc_value(int argFuncIndex, int argVal);
 	private:
 	Servo _servo;
+	float _scaleFactor270;  //input 180 degrees -> /_scalefactor720 = 120
+	float _scaleUS; //
 	int _pin;
 	int _index;
 	int _min;

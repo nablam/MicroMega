@@ -11,8 +11,7 @@
 #include <Servo.h>
 #include <LiquidCrystal.h>
 #include "mylcdbox.h"
-//LiquidCrystal ThelcdTeypad(8, 9, 4, 5, 6, 7);
-
+typedef void (*Fptr_int)(int,int);
 
 #pragma region somevars
 
@@ -22,19 +21,19 @@
 #define TOTALLEGS 4
 
 
-#define SERVOMIN 1080
-#define SERVOMID 1600
-#define SERVOMAX 1800
+//#define SERVOMIN 1080
+//#define SERVOMID 1600
+#define SHPULDERSOFFSET 500
 #define DelaySpeed 50
 
 #define ZEROPOS 1600
 Servo myservo_A;
 Servo myservo_B;
 
-int linecount = 0;
+int linecount_MegaSketch = 0;
 int posA_input;
 int posB_input;
-String StrInputed = "";
+String StrInputed_MegaSketch = "";
 
 Servo servo0;               
 Servo servo1;
@@ -66,11 +65,11 @@ Servo ArraServos[12] = { servo0 ,servo1,servo2,servo3,servo4,servo5,servo6,servo
 //Servo20kg* BL1_30;	Servo20kg* BR1_31;
 //Servo20kg* BL2_32;	Servo20kg* BR2_33;
 
-Servo20kg* FL0_22 = new Servo20kg(servo0, 22, 0, 1200, 1600, 2000, false);	 Servo20kg* FR0_23 = new Servo20kg(servo3, 23, 3, 1200, 1600, 2000, true);
+Servo20kg* FL0_22 = new Servo20kg(servo0, 22, 0, 1100, 1600, 2000, true);	 Servo20kg* FR0_23 = new Servo20kg(servo3, 23, 3, 1200, 1600, 2000, true);
 Servo20kg* FL1_24 = new Servo20kg(servo1, 24, 1, 1140, 1600, 2060, true);	 Servo20kg* FR1_25 = new Servo20kg(servo4, 25, 4, 1140, 1600, 2060, false);
 Servo20kg* FL2_26 = new Servo20kg(servo2, 26, 2, 1350, 1850, 2350, false);	 Servo20kg* FR2_27 = new Servo20kg(servo5, 27, 5, 1350, 1850, 2350, false);
 
-Servo20kg* BL0_28 = new Servo20kg(servo6, 28, 6, 1200, 1600, 2000, false);	 Servo20kg* BR0_29 = new Servo20kg(servo9, 29, 9, 1200, 1600, 2000, true);
+Servo20kg* BL0_28 = new Servo20kg(servo6, 28, 6, 1100, 1600, 2000, true);	 Servo20kg* BR0_29 = new Servo20kg(servo9, 29, 9, 1200, 1600, 2000, true);
 Servo20kg* BL1_30 = new Servo20kg(servo7, 30, 7, 1140, 1600, 2060, false);	 Servo20kg* BR1_31 = new Servo20kg(servo10, 31, 10, 1140, 1600, 2060, true);
 Servo20kg* BL2_32 = new Servo20kg(servo8, 32, 8, 1350, 1850, 2350, false);	 Servo20kg* BR2_33 = new Servo20kg(servo11, 33, 11, 1350, 1850, 2350, false);
 
@@ -218,7 +217,8 @@ void DoSwitch(int argFromLcd) {
 				SetAllServosToMid();
 				break;
 			case 1:
-				SetAllServosToMid();
+				//SetAllServosToMid();
+
 				break;
 			case 2:
 				SetAllServosToMid();
@@ -303,6 +303,13 @@ void DoSwitch(int argFromLcd) {
 				Sv20kgArra[10]->RotateHalf_Us_RelativeToMid(pval9_LS_dU);
 				Sv20kgArra[11]->Rotate_Us_RelativeToMid(pval9_LS_dU);
 				// Kinematic_Pos_KneesIN_v1(ArraServo_MINS_v1 , ArraServo_MAX_v1);
+
+				Sv20kgArra[0]->RotateHalf_Us_RelativeToMid(pval12_RS_lR - SHPULDERSOFFSET);
+				Sv20kgArra[3]->RotateHalf_Us_RelativeToMid(pval12_RS_lR - SHPULDERSOFFSET);
+				Sv20kgArra[6]->RotateHalf_Us_RelativeToMid(pval12_RS_lR - SHPULDERSOFFSET);
+				Sv20kgArra[9]->RotateHalf_Us_RelativeToMid(pval12_RS_lR - SHPULDERSOFFSET);
+
+
 				break;
 			case 37:
 				//use 2 sticks o control front back lift
@@ -317,11 +324,21 @@ void DoSwitch(int argFromLcd) {
 
 				Sv20kgArra[10]->RotateHalf_Us_RelativeToMid(pval12_RS_lR);
 				Sv20kgArra[11]->Rotate_Us_RelativeToMid(pval12_RS_lR);
+
+				Sv20kgArra[0]->RotateHalf_Us_RelativeToMid(pval11_RS_uD - SHPULDERSOFFSET);
+				Sv20kgArra[3]->RotateHalf_Us_RelativeToMid(pval11_RS_uD - SHPULDERSOFFSET);
+				Sv20kgArra[6]->RotateHalf_Us_RelativeToMid(pval11_RS_uD - SHPULDERSOFFSET);
+				Sv20kgArra[9]->RotateHalf_Us_RelativeToMid(pval11_RS_uD - SHPULDERSOFFSET);
 				// Kinematic_Pos_KneesOUT_v1(ArraServo_MINS_v1 , ArraServo_MAX_v1);
+
+			
+
 				break;
 
 				//poses 12*4
 			case 48:
+
+
 				break;
 			case 49:
 				break;
@@ -339,7 +356,19 @@ void DoSwitch(int argFromLcd) {
 
 void loop() {
 	
-	 RunTasks();
+	int sav = Serial.available();
+	//Serial.println(sav);
+	while (Serial.available() > 0) {
+		StrInputed_MegaSketch = Serial.readStringUntil('\n');
+		SerialInputsFor_ServoAB_vomparefuncs(StrInputed_MegaSketch);
+		}
+		//processIncomingByte_subEmFuncEm();
+
+	//RunTasks();
+	//while (Serial.available() == 0) {}
+	//StrInputed = Serial.readString();
+	//SerialInputsForA_Bloop();
+	//Serial.println("a");
 	}
 
 #pragma region teststuff

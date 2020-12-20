@@ -90,7 +90,9 @@ typedef void *__builtin_va_list;
 
 #include "MegaSketch.ino"
 #include "ABservoTester.ino"
+#include "MyKinematics.ino"
 #include "PotsCTRLINO.ino"
+#include "ReadSerialInputs.ino"
 #include "lcdino.ino"
 #include "servosino.ino"
 #endif
