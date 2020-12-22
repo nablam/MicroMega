@@ -13,7 +13,7 @@
 class Servo20kg {
 
 	public:
-	Servo20kg(Servo argServo, int argPin, int argIndex, int argMin, int argMid, int argMax, bool argIsReversed);
+	Servo20kg(Servo argServo, int argPin, int argIndex, int argMin, int argMid, int argMax, bool argIsReversed, int argneutral, int range, bool positiveIncreaseMovesCorrectly);
 	void AttachMe();
 	void ZeroMe();//0
 	void Rotate_Us_RelativeToMid(int agPotValue);//Pot outputs 0 -500- 1000
@@ -35,7 +35,17 @@ class Servo20kg {
 	int _mid;
 	int _max;
 	bool _isReversed;
+
+	int _ANG_sv_neutral;
+	int _ANG_sv_range;
+	bool _ANG_sv_movesCorrectly;
+
+	float _ANG_Corrected_whenLowVal;
+	float _ANG_Corrected_whenHighVal;
+
 	int _CurpositionUs;
+	float _curStandardizedAngle;
+	float _cur_Ang_sv;
 	
 	};
 

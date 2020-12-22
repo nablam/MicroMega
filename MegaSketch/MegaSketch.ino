@@ -19,6 +19,8 @@ typedef void (*Fptr_int)(int,int);
 //#define TotalServos 12
 #define TOTALSERVOS 12
 #define TOTALLEGS 4
+#define ARMLEN 12
+#define CALFLEN 12
 
 
 //#define SERVOMIN 1080
@@ -65,13 +67,13 @@ Servo ArraServos[12] = { servo0 ,servo1,servo2,servo3,servo4,servo5,servo6,servo
 //Servo20kg* BL1_30;	Servo20kg* BR1_31;
 //Servo20kg* BL2_32;	Servo20kg* BR2_33;
 
-Servo20kg* FL0_22 = new Servo20kg(servo0, 22, 0, 1100, 1600, 2000, true);	 Servo20kg* FR0_23 = new Servo20kg(servo3, 23, 3, 1200, 1600, 2000, true);
-Servo20kg* FL1_24 = new Servo20kg(servo1, 24, 1, 1140, 1600, 2060, true);	 Servo20kg* FR1_25 = new Servo20kg(servo4, 25, 4, 1140, 1600, 2060, false);
-Servo20kg* FL2_26 = new Servo20kg(servo2, 26, 2, 1350, 1850, 2350, false);	 Servo20kg* FR2_27 = new Servo20kg(servo5, 27, 5, 1350, 1850, 2350, false);
+Servo20kg* FL0_22 = new Servo20kg(servo0, 22, 0, 1100, 1600, 2000, true, 205,55,true);	 Servo20kg* FR0_23 = new Servo20kg(servo3, 23, 3, 1200, 1600, 2000, true, 205,55, false);
+Servo20kg* FL1_24 = new Servo20kg(servo1, 24, 1, 1140, 1600, 2060, true, 205, 65, true);	 Servo20kg* FR1_25 = new Servo20kg(servo4, 25, 4, 1140, 1600, 2060, false, 205,65, false);
+Servo20kg* FL2_26 = new Servo20kg(servo2, 26, 2, 1350, 1850, 2350, false,225,55,false);	 Servo20kg* FR2_27 = new Servo20kg(servo5, 27, 5, 1350, 1850, 2350, false, 225, 55, false);
 
-Servo20kg* BL0_28 = new Servo20kg(servo6, 28, 6, 1100, 1600, 2000, true);	 Servo20kg* BR0_29 = new Servo20kg(servo9, 29, 9, 1200, 1600, 2000, true);
-Servo20kg* BL1_30 = new Servo20kg(servo7, 30, 7, 1140, 1600, 2060, false);	 Servo20kg* BR1_31 = new Servo20kg(servo10, 31, 10, 1140, 1600, 2060, true);
-Servo20kg* BL2_32 = new Servo20kg(servo8, 32, 8, 1350, 1850, 2350, false);	 Servo20kg* BR2_33 = new Servo20kg(servo11, 33, 11, 1350, 1850, 2350, false);
+Servo20kg* BL0_28 = new Servo20kg(servo6, 28, 6, 1100, 1600, 2000, true, 205, 55, false);	 Servo20kg* BR0_29 = new Servo20kg(servo9, 29, 9, 1200, 1600, 2000, true, 205,55, true);
+Servo20kg* BL1_30 = new Servo20kg(servo7, 30, 7, 1140, 1600, 2060, false, 205, 65, true);	 Servo20kg* BR1_31 = new Servo20kg(servo10, 31, 10, 1140, 1600, 2060, true, 205, 65, false);
+Servo20kg* BL2_32 = new Servo20kg(servo8, 32, 8, 1350, 1850, 2350, false, 225, 55, false);	 Servo20kg* BR2_33 = new Servo20kg(servo11, 33, 11, 1350, 1850, 2350, false, 225, 55, false);
 
 
 int Mode_fromLcdMenu = 0;
@@ -353,23 +355,91 @@ void DoSwitch(int argFromLcd) {
 
 
 	}
-
-void loop() {
+	bool ranOnce = false;
+	#define SizeTable 241
 	
+	void loop() {
+		while (Serial.available() > 0) {
+			StrInputed_MegaSketch = Serial.readStringUntil('\n');
+			SerialInputsFor_ServoAB_vomparefuncs(StrInputed_MegaSketch);
+			//testMyFuncs(StrInputed_MegaSketch);
+			}
+		}
+	//if (!ranOnce) {
+		//unsigned long start = micros();
+		//for (int h = 100; h < 200; h++) {
+		//	float h_floated = h * (0.1f);
+		//	Serial.print("{ ");
+		//	for (int i = 0; i < SizeTable; i++) {
+		//		float floated_i = i * (0.1f);
+		//		float resultat = GetRawAngle( floated_i , h_floated);
+		//		if (i < SizeTable - 1) {
+		//			Serial.print(resultat, 1);
+		//			Serial.print(",");
+		//			}
+		//		else
+		//			{
+		//			Serial.print(resultat, 1);
+		//			}
+		//		}
+		//	if (h < SizeTable - 1) {
+		//		Serial.println(" },");
+		//		}
+		//	else
+		//		{
+		//		Serial.println(" }");
+		//		}
+		//	}
+			//float floated_i = i * (0.1f);
+			//float angAC_i = getANgleSSS(ARMLEN, CALFLEN, floated_i);
+			//Serial.print(angAC_i, 1);
+			//Serial.print(",");
+		//	float angC_i_A = getANgleSSS(CALFLEN, floated_i,ARMLEN );
+		//	Serial.print(i,1);
+		//	Serial.print(",");
+		//	Serial.print(floated_i, 1);
+		//	Serial.print(",");*/
+		//	Serial.println(angAC_i,1);
+		//
+		//
+		//float sq = sqrt(13.5);
+		//// Compute the time it took
+		//unsigned long end = micros();
+		//unsigned long delta = end - start;
+	//	Serial.print("ang1=");
+	//	Serial.println(ang1, 1);
+		//Serial.print("sq=");
+		//Serial.println(sq, 1);
+		//Serial.print("time=");
+		//Serial.println(delta);
+		//ranOnce = true;
+	//	}
+
+
+	/*
 	int sav = Serial.available();
 	//Serial.println(sav);
 	while (Serial.available() > 0) {
 		StrInputed_MegaSketch = Serial.readStringUntil('\n');
-		SerialInputsFor_ServoAB_vomparefuncs(StrInputed_MegaSketch);
+//		SerialInputsFor_ServoAB_vomparefuncs(StrInputed_MegaSketch);
+
+		unsigned long start = micros();
+		// Call to your function
+		testMyFuncs(StrInputed_MegaSketch);
+
+		// Compute the time it took
+		unsigned long end = micros();
+		unsigned long delta = end - start;
+		Serial.println(delta);
 		}
 		//processIncomingByte_subEmFuncEm();
-
+	*/
 	//RunTasks();
 	//while (Serial.available() == 0) {}
 	//StrInputed = Serial.readString();
 	//SerialInputsForA_Bloop();
 	//Serial.println("a");
-	}
+	//}
 
 #pragma region teststuff
 void betterSwitch() {

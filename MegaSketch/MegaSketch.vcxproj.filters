@@ -25,6 +25,7 @@
     <None Include="ABservoTester.ino" />
     <None Include="ReadSerialInputs.ino" />
     <None Include="MyKinematics.ino" />
+    <None Include="MyTables.ino" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.MegaSketch.vsarduino.h">

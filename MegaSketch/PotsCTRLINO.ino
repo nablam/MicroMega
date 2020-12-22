@@ -89,6 +89,3 @@ void ReadInputRate_sweep_noservomove() {
 	currentValue = currentValue + stepdiff;
 
 	}
-
-
-

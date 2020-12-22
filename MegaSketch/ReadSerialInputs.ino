@@ -105,7 +105,7 @@ void SerialInputsFor_LcdFunctions_i_f_v(String argDatas) {
     }
 
 void SerialInputsFor_ServoAB_vomparefuncs(String argDatas) {
-    linecount_MegaSketch++;
+   // linecount_MegaSketch++;
 
     int theval= argDatas.toInt();
   
@@ -113,8 +113,17 @@ void SerialInputsFor_ServoAB_vomparefuncs(String argDatas) {
     Serial.print("theval= ");
     Serial.print(theval);
 
-    Sv20kgArra[1]->SetAngleDegrees_toUS_noscale(theval);
-  //  Sv20kgArra[2]->SetAngleDegrees_toUS_noscale(theval);
+   // delay(1000);
+  //  Sv20kgArra[0]->SetAngleDegrees_ScaleFactor1p5(theval);
+  /*  Sv20kgArra[0]->SetAngleDegrees_ScaleFactor1p5(theval);
+    Sv20kgArra[3]->SetAngleDegrees_ScaleFactor1p5(theval);
+    Sv20kgArra[6]->SetAngleDegrees_ScaleFactor1p5(theval);*/
+    Sv20kgArra[9]->SetAngleDegrees_ScaleFactor1p5(theval);
+
+  //  Sv20kgArra[0]->SetUs(theval);
+    //Sv20kgArra[6]->SetAngleDegrees_ScaleFactor1p5(theval);
+    //Sv20kgArra[9]->SetAngleDegrees_ScaleFactor1p5(theval);
+
 
     }
 
