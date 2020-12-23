@@ -67,14 +67,22 @@ Servo ArraServos[12] = { servo0 ,servo1,servo2,servo3,servo4,servo5,servo6,servo
 //Servo20kg* BL1_30;	Servo20kg* BR1_31;
 //Servo20kg* BL2_32;	Servo20kg* BR2_33;
 
-Servo20kg* FL0_22 = new Servo20kg(servo0, 22, 0, 1100, 1550, 2000, true, 205,55,true);	 Servo20kg* FR0_23 = new Servo20kg(servo3, 23, 3, 1060, 1554, 2000, true, 205,65, false);
-Servo20kg* FL1_24 = new Servo20kg(servo1, 24, 1, 1140, 1600, 2060, true, 205, 65, true);	 Servo20kg* FR1_25 = new Servo20kg(servo4, 25, 4, 1140, 1600, 2060, false, 205,65, false);
-Servo20kg* FL2_26 = new Servo20kg(servo2, 26, 2, 1350, 1850, 2350, false,225,55,false);	 Servo20kg* FR2_27 = new Servo20kg(servo5, 27, 5, 1350, 1850, 2350, false, 225, 55, false);
+//Servo20kg* FL0_22 = new Servo20kg(servo0, 22, 0, 1100, 1550, 2000, true, 205,55,true);	 Servo20kg* FR0_23 = new Servo20kg(servo3, 23, 3, 1060, 1554, 2000, true, 205,65, false);
+//Servo20kg* FL1_24 = new Servo20kg(servo1, 24, 1, 1140, 1600, 2060, true, 205, 65, true);	 Servo20kg* FR1_25 = new Servo20kg(servo4, 25, 4, 1140, 1600, 2060, false, 205,65, false);
+//Servo20kg* FL2_26 = new Servo20kg(servo2, 26, 2, 1350, 1850, 2350, false,225,55,false);	 Servo20kg* FR2_27 = new Servo20kg(servo5, 27, 5, 1350, 1850, 2350, false, 225, 55, false);
+//
+//Servo20kg* BL0_28 = new Servo20kg(servo6, 28, 6, 1100, 1600, 2000, true, 205, 55, false);	 Servo20kg* BR0_29 = new Servo20kg(servo9, 29, 9, 1200, 1600, 2000, true, 205,55, true);
+//Servo20kg* BL1_30 = new Servo20kg(servo7, 30, 7, 1140, 1600, 2060, false, 205, 65, false);	 Servo20kg* BR1_31 = new Servo20kg(servo10, 31, 10, 1140, 1600, 2060, true, 205, 65, true);
+//Servo20kg* BL2_32 = new Servo20kg(servo8, 32, 8, 1350, 1850, 2350, false, 225, 55, false);	 Servo20kg* BR2_33 = new Servo20kg(servo11, 33, 11, 1350, 1850, 2350, false, 225, 55, false);
+//
 
-Servo20kg* BL0_28 = new Servo20kg(servo6, 28, 6, 1100, 1600, 2000, true, 205, 55, false);	 Servo20kg* BR0_29 = new Servo20kg(servo9, 29, 9, 1200, 1600, 2000, true, 205,55, true);
+Servo20kg* FL0_22 = new Servo20kg(servo0, 22, 0, 1100, 1550, 2000, true, 205, 55, true);	 Servo20kg* FR0_23 = new Servo20kg(servo3, 23, 3, 1060, 1554, 2000, true, 205, 65, true);
+Servo20kg* FL1_24 = new Servo20kg(servo1, 24, 1, 1140, 1600, 2060, true, 205, 65, true);	 Servo20kg* FR1_25 = new Servo20kg(servo4, 25, 4, 1140, 1600, 2060, false, 205, 65, false);
+Servo20kg* FL2_26 = new Servo20kg(servo2, 26, 2, 1350, 1850, 2350, false, 225, 55, false);	 Servo20kg* FR2_27 = new Servo20kg(servo5, 27, 5, 1350, 1850, 2350, false, 225, 55, false);
+
+Servo20kg* BL0_28 = new Servo20kg(servo6, 28, 6, 1100, 1600, 2000, true, 205, 55, false);	 Servo20kg* BR0_29 = new Servo20kg(servo9, 29, 9, 1200, 1600, 2000, true, 205, 55, false);
 Servo20kg* BL1_30 = new Servo20kg(servo7, 30, 7, 1140, 1600, 2060, false, 205, 65, false);	 Servo20kg* BR1_31 = new Servo20kg(servo10, 31, 10, 1140, 1600, 2060, true, 205, 65, true);
 Servo20kg* BL2_32 = new Servo20kg(servo8, 32, 8, 1350, 1850, 2350, false, 225, 55, false);	 Servo20kg* BR2_33 = new Servo20kg(servo11, 33, 11, 1350, 1850, 2350, false, 225, 55, false);
-
 
 
 
@@ -142,7 +150,7 @@ Servo20kg* Sv20kg_Arms_Low[4] = { FL2_26,FR2_27,BL2_32,BR2_33 };
 
 void setup()
 	{
-	Serial.begin(115200);
+	//Serial.begin(115200);
 	pinMode(potpin8, INPUT);
 	pinMode(potpin9, INPUT);
 	pinMode(potpin10, INPUT);
@@ -170,7 +178,7 @@ void RunTasks(){
 
 
 	currentMillis = millis();
-	if (currentMillis - previousMillis >= 20)  {  
+	if (currentMillis - previousMillis >= 5)  {  
 		
 		previousMillis = currentMillis;
 

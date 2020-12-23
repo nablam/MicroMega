@@ -228,28 +228,56 @@ float sqrt88x(const float x)
 	}
 void UsePotinputsForLegKine() {
 	int inputX = map(pval10_LS_lR, 0, 1000, -12, 12);
+
+	int inputRevY= map(pval9_LS_dU, 0, 1000, 12, -12);
 	int inputY = map(pval9_LS_dU, 0, 1000, -12, 12);
 	int inputZ = map(pval11_RS_uD, 0, 1000, 6, 24);
 	
 
-	SetLeg(inputX, inputY, inputZ, 0, 1, 2);
-	SetLeg(inputX, inputY, inputZ, 3, 4, 5);
-	SetLeg(inputX, inputY, inputZ, 6, 7, 8);
-	SetLeg(inputX, inputY, inputZ, 9, 10, 11);
+	SetLeg(inputX, inputY, inputZ, inputRevY, 0, 1, 2);
+	SetLeg(inputX, inputY, inputZ, inputRevY ,3, 4, 5);
+	SetLeg(inputX, inputY, inputZ, inputRevY, 6, 7, 8);
+	SetLeg(inputX, inputY, inputZ, inputRevY,9, 10, 11);
 	}
 
-void SetLeg(int argT, int argD, int argH, int argIndexshoulder, int argIndexarm, int argIndexcaf) {
-	//use Disp and HEight to get Z'
-	float Zprime = GetZprime(argH, argT);
-	float S0Angle = GetRawAngle(argT, Zprime);
+void SetLeg(int argT, int argD, int argH, int argRevPot, int argIndexshoulder, int argIndexarm, int argIndexcaf) {
+
+	if (argIndexarm != 10 && argIndexarm != 7) {
+			//use Disp and HEight to get Z'
+		float Zprime = GetZprime(argH, argT);
+		float S0Angle = GetRawAngle(argT, Zprime);
+
+		float z = GetZprime(argD, Zprime);
+		float S1AnglePlus = GetRawAngle(argD, Zprime);
+		float S1Angle = getANgleSSS(ARMLEN, CALFLEN, z);
+
+		S1Angle = S1AnglePlus - S1Angle;
+		float S2Angle = getANgleSSS(CALFLEN, z, ARMLEN);
+
+		Sv20kgArra[argIndexshoulder]->WriteNormalDegrees_convert_writeMilis(S0Angle);
+		Sv20kgArra[argIndexarm]->WriteNormalDegrees_convert_writeMilis(S1Angle);
+		Sv20kgArra[argIndexcaf]->WriteNormalDegrees_convert_writeMilis(S2Angle);
+		}
+
+	else
+		{
+
+			//use Disp and HEight to get Z'
+		float Zprime = GetZprime(argH, argT);
+		float S0Angle = GetRawAngle(argT, Zprime);
+
+		float z = GetZprime(argRevPot, Zprime);
+		float S1AnglePlus = GetRawAngle(argRevPot, Zprime);
+		float S1Angle = getANgleSSS(ARMLEN, CALFLEN, z);
+
+		S1Angle = S1AnglePlus - S1Angle;
+		float S2Angle = getANgleSSS(CALFLEN, z, ARMLEN);
+
+		Sv20kgArra[argIndexshoulder]->WriteNormalDegrees_convert_writeMilis(S0Angle);
+		Sv20kgArra[argIndexarm]->WriteNormalDegrees_convert_writeMilis(S1Angle);
+		Sv20kgArra[argIndexcaf]->WriteNormalDegrees_convert_writeMilis(S2Angle);
+		}
+
+	}
+
  
-	float z = GetZprime(argD, Zprime);
-	float S1AnglePlus = GetRawAngle(argD, Zprime);
-	float S1Angle = getANgleSSS(ARMLEN, CALFLEN, z);
-	S1Angle = S1AnglePlus - S1Angle;
-	float S2Angle = getANgleSSS(CALFLEN, z, ARMLEN);
-
-	Sv20kgArra[argIndexshoulder]->WriteNormalDegrees_convert_writeMilis(S0Angle);
-	Sv20kgArra[argIndexarm]->WriteNormalDegrees_convert_writeMilis(S1Angle);
-	Sv20kgArra[argIndexcaf]->WriteNormalDegrees_convert_writeMilis(S2Angle);
-	}
