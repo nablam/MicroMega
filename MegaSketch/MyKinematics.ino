@@ -177,7 +177,7 @@ void testMyFuncs(String argDatas) {
 
 	float S1AnglePlus = GetRawAngle(B, Zprime);
 	float S1Angle = getANgleSSS(ARMLEN, CALFLEN, z);
-	S1Angle += S1AnglePlus;
+	S1Angle = S1AnglePlus- S1Angle;
 	float S2Angle = getANgleSSS( CALFLEN, z,ARMLEN);
 
 
@@ -189,10 +189,23 @@ void testMyFuncs(String argDatas) {
 	Serial.print(S2Angle);
 	Serial.println("  ");
 
-	//Sv20kgArra[0]->SetAngleDegrees_ScaleFactor1p5(S0Angle);
-	//Sv20kgArra[3]->SetAngleDegrees_ScaleFactor1p5(S0Angle);
-	//Sv20kgArra[6]->SetAngleDegrees_ScaleFactor1p5(S0Angle);
-	//Sv20kgArra[9]->SetAngleDegrees_ScaleFactor1p5(S0Angle);
+	Sv20kgArra[0]->SetAngleDegrees_ScaleFactor1p5(S0Angle);
+	Sv20kgArra[3]->SetAngleDegrees_ScaleFactor1p5(S0Angle);
+	Sv20kgArra[6]->SetAngleDegrees_ScaleFactor1p5(S0Angle);
+	Sv20kgArra[9]->SetAngleDegrees_ScaleFactor1p5(S0Angle);
+
+   
+
+   Sv20kgArra[1]->SetAngleDegrees_ScaleFactor1p5(S1Angle);
+	Sv20kgArra[4]->SetAngleDegrees_ScaleFactor1p5(S1Angle);
+	Sv20kgArra[7]->SetAngleDegrees_ScaleFactor1p5(S1Angle);
+	Sv20kgArra[10]->SetAngleDegrees_ScaleFactor1p5(S1Angle);
+
+	Sv20kgArra[2]->SetAngleDegrees_ScaleFactor1p5(S2Angle);
+	Sv20kgArra[5]->SetAngleDegrees_ScaleFactor1p5(S2Angle);
+	Sv20kgArra[8]->SetAngleDegrees_ScaleFactor1p5(S2Angle);
+	Sv20kgArra[11]->SetAngleDegrees_ScaleFactor1p5(S2Angle);
+
 
 	}
 //

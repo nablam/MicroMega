@@ -60,7 +60,7 @@ int deadzonefilter(int argval, bool argisRot) {
 
 void ReadInputRate_sweep_noservomove() {
 
-	inputRate = map(pval11_RS_uD, 0, 1000, 1, 10);;// pval11_RS_uD;//
+	inputRate = map(pval13_RS_rot, 0, 1000, 1, 10);// pval11_RS_uD;//
 	rate = inputRate;
 
 

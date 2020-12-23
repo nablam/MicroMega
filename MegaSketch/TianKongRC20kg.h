@@ -25,6 +25,8 @@ class Servo20kg {
 	void SetAngleDegrees_toUS_noscale(int argAngle);
 		
 	void Dispatch_TestFunc_value(int argFuncIndex, int argVal);
+	int  WriteCorrectMillisFromInputangle(int argInputANG);
+	
 	private:
 	Servo _servo;
 	float _scaleFactor270;  //input 180 degrees -> /_scalefactor720 = 120
@@ -38,6 +40,7 @@ class Servo20kg {
 
 	int _ANG_sv_neutral;
 	int _ANG_sv_range;
+	
 	bool _ANG_sv_movesCorrectly;
 
 	float _ANG_Corrected_whenLowVal;
