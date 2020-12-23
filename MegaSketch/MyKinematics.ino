@@ -189,22 +189,22 @@ void testMyFuncs(String argDatas) {
 	Serial.print(S2Angle);
 	Serial.println("  ");
 
-	Sv20kgArra[0]->SetAngleDegrees_ScaleFactor1p5(S0Angle);
-	Sv20kgArra[3]->SetAngleDegrees_ScaleFactor1p5(S0Angle);
-	Sv20kgArra[6]->SetAngleDegrees_ScaleFactor1p5(S0Angle);
-	Sv20kgArra[9]->SetAngleDegrees_ScaleFactor1p5(S0Angle);
+	Sv20kgArra[0]->WriteNormalDegrees_convert_writeMilis(S0Angle);
+	Sv20kgArra[3]->WriteNormalDegrees_convert_writeMilis(S0Angle);
+	Sv20kgArra[6]->WriteNormalDegrees_convert_writeMilis(S0Angle);
+	Sv20kgArra[9]->WriteNormalDegrees_convert_writeMilis(S0Angle);
 
    
 
-   Sv20kgArra[1]->SetAngleDegrees_ScaleFactor1p5(S1Angle);
-	Sv20kgArra[4]->SetAngleDegrees_ScaleFactor1p5(S1Angle);
-	Sv20kgArra[7]->SetAngleDegrees_ScaleFactor1p5(S1Angle);
-	Sv20kgArra[10]->SetAngleDegrees_ScaleFactor1p5(S1Angle);
+   Sv20kgArra[1]->WriteNormalDegrees_convert_writeMilis(S1Angle);
+	Sv20kgArra[4]->WriteNormalDegrees_convert_writeMilis(S1Angle);
+	Sv20kgArra[7]->WriteNormalDegrees_convert_writeMilis(S1Angle);
+	Sv20kgArra[10]->WriteNormalDegrees_convert_writeMilis(S1Angle);
 
-	Sv20kgArra[2]->SetAngleDegrees_ScaleFactor1p5(S2Angle);
-	Sv20kgArra[5]->SetAngleDegrees_ScaleFactor1p5(S2Angle);
-	Sv20kgArra[8]->SetAngleDegrees_ScaleFactor1p5(S2Angle);
-	Sv20kgArra[11]->SetAngleDegrees_ScaleFactor1p5(S2Angle);
+	Sv20kgArra[2]->WriteNormalDegrees_convert_writeMilis(S2Angle);
+	Sv20kgArra[5]->WriteNormalDegrees_convert_writeMilis(S2Angle);
+	Sv20kgArra[8]->WriteNormalDegrees_convert_writeMilis(S2Angle);
+	Sv20kgArra[11]->WriteNormalDegrees_convert_writeMilis(S2Angle);
 
 
 	}
@@ -225,4 +225,31 @@ float sqrt88x(const float x)
 	u.x = x;
 	u.i = (1 << 29) + (u.i >> 1) - (1 << 22);
 	return u.x;
+	}
+void UsePotinputsForLegKine() {
+	int inputX = map(pval10_LS_lR, 0, 1000, -12, 12);
+	int inputY = map(pval9_LS_dU, 0, 1000, -12, 12);
+	int inputZ = map(pval11_RS_uD, 0, 1000, 6, 24);
+	
+
+	SetLeg(inputX, inputY, inputZ, 0, 1, 2);
+	SetLeg(inputX, inputY, inputZ, 3, 4, 5);
+	SetLeg(inputX, inputY, inputZ, 6, 7, 8);
+	SetLeg(inputX, inputY, inputZ, 9, 10, 11);
+	}
+
+void SetLeg(int argT, int argD, int argH, int argIndexshoulder, int argIndexarm, int argIndexcaf) {
+	//use Disp and HEight to get Z'
+	float Zprime = GetZprime(argH, argT);
+	float S0Angle = GetRawAngle(argT, Zprime);
+ 
+	float z = GetZprime(argD, Zprime);
+	float S1AnglePlus = GetRawAngle(argD, Zprime);
+	float S1Angle = getANgleSSS(ARMLEN, CALFLEN, z);
+	S1Angle = S1AnglePlus - S1Angle;
+	float S2Angle = getANgleSSS(CALFLEN, z, ARMLEN);
+
+	Sv20kgArra[argIndexshoulder]->WriteNormalDegrees_convert_writeMilis(S0Angle);
+	Sv20kgArra[argIndexarm]->WriteNormalDegrees_convert_writeMilis(S1Angle);
+	Sv20kgArra[argIndexcaf]->WriteNormalDegrees_convert_writeMilis(S2Angle);
 	}

@@ -20,9 +20,9 @@ class Servo20kg {
 	void RotateHalf_Us_RelativeToMid(int agPotValue);//Pot outputs 0 -500- 1000
 
 
-	void SetAngleDegrees_ScaleFactor1p5(int argAngle);
+	void WriteNormalDegrees_convert_writeMilis(int argAngle);
 	void SetUs(int argPuls);
-	void SetAngleDegrees_toUS_noscale(int argAngle);
+	void General_ServoSetAngle(int argTransversal, int argDisplacement, int argHeight);
 		
 	void Dispatch_TestFunc_value(int argFuncIndex, int argVal);
 	int  WriteCorrectMillisFromInputangle(int argInputANG);

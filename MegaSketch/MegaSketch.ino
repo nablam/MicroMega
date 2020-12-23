@@ -189,20 +189,16 @@ void RunTasks(){
 
 
 		  //TASK 4
-		DoSwitch(Mode_fromLcdMenu);
+		//DoSwitch(Mode_fromLcdMenu);
+
+
+		  UsePotinputsForLegKine();
 
 
 
 
-
-
-
-
-
-
-	 // ArraServos[11].writeMicroseconds(map(pval10_LS_lR,0,1000,1080,1880));
-	  // SetAllServosTo(1440);
-		ReadInputRate_sweep_noservomove();
+		   
+	//	ReadInputRate_sweep_noservomove();
 	 
 		}
 
@@ -365,18 +361,15 @@ void DoSwitch(int argFromLcd) {
 	void NotRunTask() {
 		while (Serial.available() > 1) {
 			StrInputed_MegaSketch = Serial.readStringUntil('\n');
-			Sv20kgArra[2]->SetAngleDegrees_ScaleFactor1p5(SerialInputsFor_ServoAB_vomparefuncs(StrInputed_MegaSketch)); //enter angle in degrees
-			Sv20kgArra[5]->SetAngleDegrees_ScaleFactor1p5(SerialInputsFor_ServoAB_vomparefuncs(StrInputed_MegaSketch));
-			Sv20kgArra[8]->SetAngleDegrees_ScaleFactor1p5(SerialInputsFor_ServoAB_vomparefuncs(StrInputed_MegaSketch));
-			Sv20kgArra[11]->SetAngleDegrees_ScaleFactor1p5(SerialInputsFor_ServoAB_vomparefuncs(StrInputed_MegaSketch));
+			
 			   //testMyFuncs(StrInputed_MegaSketch);//enter d,t,h
 			}
 		}
 	void loop() {
 
-		//RunTasks();
+		RunTasks();
 
-		NotRunTask();
+		//NotRunTask();
 
 
 		}
