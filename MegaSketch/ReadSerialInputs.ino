@@ -109,9 +109,9 @@ int SerialInputsFor_ServoAB_vomparefuncs(String argDatas) {
 
     int theval= argDatas.toInt();
   
-    Serial.print(formatLineCountPrint(linecount_MegaSketch));  Serial.print("  |");
-    Serial.print("theval= ");
-    Serial.print(theval);
+ //   Serial.print(formatLineCountPrint(linecount_MegaSketch));  Serial.print("  |");
+ //   Serial.print("theval= ");
+//    Serial.print(theval);
     return (theval);
    // delay(1000);
   //  Sv20kgArra[0]->SetAngleDegrees_ScaleFactor1p5(theval);

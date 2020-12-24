@@ -88,7 +88,7 @@ void Servo20kg::RotateHalf_Us_RelativeToMid(int argPotVal_0_500_1k) {
 	}
 
 void Servo20kg::SetUs(int argPulse) {
-	_servo.writeMicroseconds(argPulse);
+	_servo.write(argPulse);
 	}
 
 void Servo20kg::General_ServoSetAngle(int argTransversal, int argDisplacement, int argHeight) {

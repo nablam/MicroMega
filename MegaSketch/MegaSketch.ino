@@ -6,6 +6,7 @@
 
 
 //Sample using LiquidCrystal library
+#include "SuperServo.h"
 #include "TianKongRC20kg.h"
 #include "mylcdbox.h"
 #include <Servo.h>
@@ -373,13 +374,46 @@ void DoSwitch(int argFromLcd) {
 			   //testMyFuncs(StrInputed_MegaSketch);//enter d,t,h
 			}
 		}
+
+	int tempangle = 0;
+	int tempDelay = 3000;
 	void loop() {
 
-		RunTasks();
+		//RunTasks();
 
 		//NotRunTask();
+		tempangle = 0;
+		Sv20kgArra[1]->SetUs(tempangle);
+		Sv20kgArra[2]->SetUs(tempangle);
+		Serial.println(tempangle);
+		delay(tempDelay);
+
+		tempangle = 90;
+		Sv20kgArra[1]->SetUs(tempangle);
+		Sv20kgArra[2]->SetUs(tempangle);
+		Serial.println(tempangle);
+		delay(tempDelay);
 
 
+		tempangle = 180;
+		Sv20kgArra[1]->SetUs(tempangle);
+		Sv20kgArra[2]->SetUs(tempangle);
+		Serial.println(tempangle);
+		delay(tempDelay);
+
+
+		tempangle = 270;
+		Sv20kgArra[1]->SetUs(tempangle);
+		Sv20kgArra[2]->SetUs(tempangle);
+		Serial.println(tempangle);
+		delay(tempDelay);
+
+			//Serial.println(sav);
+		/*while (Serial.available() > 0) {
+			int ang = Serial.readStringUntil('\n').toInt();
+			Sv20kgArra[1]->SetUs(ang); 	 
+			Sv20kgArra[2]->SetUs(ang);
+			}*/
 		}
 
 
@@ -435,7 +469,6 @@ void DoSwitch(int argFromLcd) {
 		//Serial.println(delta);
 		//ranOnce = true;
 	//	}
-
 
 	/*
 	int sav = Serial.available();
