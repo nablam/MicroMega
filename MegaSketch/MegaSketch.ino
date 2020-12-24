@@ -6,6 +6,7 @@
 
 
 //Sample using LiquidCrystal library
+#include "SrevoII.h"
 #include "TianKongRC20kg.h"
 #include "mylcdbox.h"
 #include <Servo.h>
