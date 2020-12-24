@@ -37,12 +37,18 @@
     <ClInclude Include="TianKongRC20kg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SuperServo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mylcdbox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TianKongRC20kg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SuperServo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
