@@ -150,7 +150,7 @@ Servo20kg* Sv20kg_Arms_Low[4] = { FL2_26,FR2_27,BL2_32,BR2_33 };
 
 void setup()
 	{
-	//Serial.begin(115200);
+	Serial.begin(115200);
 	pinMode(potpin8, INPUT);
 	pinMode(potpin9, INPUT);
 	pinMode(potpin10, INPUT);
@@ -169,7 +169,20 @@ void setup()
 	_mulcdDrivenMenu =  new LcdBoxMenuCtrl(8, 9, 4, 5, 6, 7);
 	//TIMSK0 = 0;//stop t/c interupt
 	
+	QuickAndDirtyLoad();
+
+
+	delay(500);
+
 	SetAllServosToMid();
+	delay(500);
+
+
+	Sv20kgArra[1]->SetUs(0);
+	Sv20kgArra[2]->SetUs(0);
+	Serial.println("0000");
+	delay(4000);
+
 
 	}
 
@@ -178,7 +191,7 @@ void RunTasks(){
 
 
 	currentMillis = millis();
-	if (currentMillis - previousMillis >= 5)  {  
+	if (currentMillis - previousMillis >= 15)  {  
 		
 		previousMillis = currentMillis;
 
@@ -200,9 +213,11 @@ void RunTasks(){
 		//DoSwitch(Mode_fromLcdMenu);
 
 
-		  UsePotinputsForLegKine();
+		//  UsePotinputsForLegKine();
 
-
+		  Sv20kgArra[0]->General_ServoWalkCycle(28, pval13_RS_rot);
+		  Sv20kgArra[1]->General_ServoWalkCycle(28, pval13_RS_rot);
+		  Sv20kgArra[2]->General_ServoWalkCycle(28, pval13_RS_rot);
 
 
 		   
@@ -373,13 +388,142 @@ void DoSwitch(int argFromLcd) {
 			   //testMyFuncs(StrInputed_MegaSketch);//enter d,t,h
 			}
 		}
+	//void loop() {
+
+	//	RunTasks();
+
+	//	//NotRunTask();
+
+
+	//	}
+
+	int tempangle = 0;
+	int tempDelay = 3000;
 	void loop() {
 
-		RunTasks();
+	//RunTasks();
 
-		//NotRunTask();
+	//NotRunTask();
+		tempangle = 0;
+		Sv20kgArra[1]->SetUs(tempangle);
+		Sv20kgArra[2]->SetUs(tempangle);
+		Serial.println(tempangle);
+		delay(tempDelay);
+
+		tempangle = 60;
+		Sv20kgArra[1]->SetUs(tempangle);
+		Sv20kgArra[2]->SetUs(tempangle);
+		Serial.println(tempangle);
+		delay(tempDelay);
 
 
+		tempangle = 90;
+		Sv20kgArra[1]->SetUs(tempangle);
+		Sv20kgArra[2]->SetUs(tempangle);
+		Serial.println(tempangle);
+		delay(tempDelay);
+
+
+		tempangle = 120;
+		Sv20kgArra[1]->SetUs(tempangle);
+		Sv20kgArra[2]->SetUs(tempangle);
+		Serial.println(tempangle);
+		delay(tempDelay);
+
+
+		tempangle = 150;
+		Sv20kgArra[1]->SetUs(tempangle);
+		Sv20kgArra[2]->SetUs(tempangle);
+		Serial.println(tempangle);
+		delay(tempDelay);
+
+
+		tempangle = 180;
+		Sv20kgArra[1]->SetUs(tempangle);
+		Sv20kgArra[2]->SetUs(tempangle);
+		Serial.println(tempangle);
+		delay(tempDelay);
+
+
+		tempangle = 210;
+		Sv20kgArra[1]->SetUs(tempangle);
+		Sv20kgArra[2]->SetUs(tempangle);
+		Serial.println(tempangle);
+		delay(tempDelay);
+
+
+		tempangle = 240;
+		Sv20kgArra[1]->SetUs(tempangle);
+		Sv20kgArra[2]->SetUs(tempangle);
+		Serial.println(tempangle);
+		delay(tempDelay);
+
+		tempangle = 270;
+		Sv20kgArra[1]->SetUs(tempangle);
+		Sv20kgArra[2]->SetUs(tempangle);
+		Serial.println(tempangle);
+		delay(tempDelay);
+
+
+
+		tempangle = 240;
+		Sv20kgArra[1]->SetUs(tempangle);
+		Sv20kgArra[2]->SetUs(tempangle);
+		Serial.println(tempangle);
+		delay(tempDelay);
+
+		tempangle = 210;
+		Sv20kgArra[1]->SetUs(tempangle);
+		Sv20kgArra[2]->SetUs(tempangle);
+		Serial.println(tempangle);
+		delay(tempDelay);
+
+
+
+		tempangle = 180;
+		Sv20kgArra[1]->SetUs(tempangle);
+		Sv20kgArra[2]->SetUs(tempangle);
+		Serial.println(tempangle);
+		delay(tempDelay);
+
+
+		tempangle = 150;
+		Sv20kgArra[1]->SetUs(tempangle);
+		Sv20kgArra[2]->SetUs(tempangle);
+		Serial.println(tempangle);
+		delay(tempDelay);
+
+		tempangle = 120;
+		Sv20kgArra[1]->SetUs(tempangle);
+		Sv20kgArra[2]->SetUs(tempangle);
+		Serial.println(tempangle);
+		delay(tempDelay);
+
+		tempangle = 90;
+		Sv20kgArra[1]->SetUs(tempangle);
+		Sv20kgArra[2]->SetUs(tempangle);
+		Serial.println(tempangle);
+		delay(tempDelay);
+
+
+		tempangle = 60;
+		Sv20kgArra[1]->SetUs(tempangle);
+		Sv20kgArra[2]->SetUs(tempangle);
+		Serial.println(tempangle);
+		delay(tempDelay);
+
+		tempangle = 30;
+		Sv20kgArra[1]->SetUs(tempangle);
+		Sv20kgArra[2]->SetUs(tempangle);
+		Serial.println(tempangle);
+		delay(tempDelay);
+
+		//Serial.println(sav);
+		/*while (Serial.available() > 0) {
+		int ang = Serial.readStringUntil('\n').toInt();
+		Sv20kgArra[1]->SetUs(ang);
+		Sv20kgArra[2]->SetUs(ang);
+		}*/
 		}
 
 

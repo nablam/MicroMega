@@ -20,6 +20,8 @@ Servo20kg::Servo20kg(Servo argServo, int argPin, int argIndex, int argMin, int a
 	  _ANG_sv_range= argrange;
 	  _ANG_sv_movesCorrectly= positiveIncreaseMovesCorrectly;
 
+	  _state = 0;
+	  _stepdiff = 0;
 	  //if (positiveIncreaseMovesCorrectly) {
 		 // _ANG_Corrected_whenLowVal = _ANG_sv_neutral;
 		 // 
@@ -88,13 +90,83 @@ void Servo20kg::RotateHalf_Us_RelativeToMid(int argPotVal_0_500_1k) {
 	}
 
 void Servo20kg::SetUs(int argPulse) {
-	_servo.writeMicroseconds(argPulse);
+	//_servo.writeMicroseconds(argPulse);
+	_servo.write(argPulse);
+	_CurpositionUs = argPulse;
 	}
 
-void Servo20kg::General_ServoSetAngle(int argTransversal, int argDisplacement, int argHeight) {
+void Servo20kg::LoadStatesUs(int argus) {
+	float newAng;//based ofset 205
+	if (_ANG_sv_movesCorrectly) {
+		newAng = _ANG_sv_neutral + argus;
+		if (_index % 3 == 2) {
+			newAng = _ANG_sv_neutral + argus - 90;
+			}
+		}
+	else
+		{
+		newAng = _ANG_sv_neutral - argus;
+		if (_index % 3 == 2) { newAng = _ANG_sv_neutral - argus + 90; }
+		}
+	int convertedFor270Scal = (float)newAng / _scaleFactor270;
+	_cur_Ang_sv = convertedFor270Scal;
+	int newUS = WriteCorrectMillisFromInputangle(argus);
 
-
+	if (_i_stateUs >= 4)_i_stateUs = 0;
+	States_Us[_i_stateUs] = newUS;
+	_i_stateUs++;
+	
 	}
+
+
+void Servo20kg::General_ServoWalkCycle( int argRateMultiplier, int argInRate) {
+
+	_inputRate = map(argInRate, 0, 1000, 1, 10);// pval11_RS_uD;//
+	_rate = _inputRate;
+
+
+	switch (_state) {
+			case 0:
+				_targetValue = States_Us[_state]; //lowend
+				if (abs(_currentValue - _targetValue) < 3) {
+					_state = 1;
+					_prevTargetValue = _targetValue;
+					_currentValue = _targetValue;
+					}
+				break;
+			case 1:
+				_targetValue = States_Us[_state]; //lowend
+				if (abs(_currentValue - _targetValue) < 3) {
+					_state = 2;
+					_prevTargetValue = _targetValue;
+					_currentValue = _targetValue;
+					}
+					break;
+			case 2:
+				_targetValue = States_Us[_state]; //lowend
+				if (abs(_currentValue - _targetValue) < 3) {
+					_state = 3;
+					_prevTargetValue = _targetValue;
+					_currentValue = _targetValue;
+					}
+					break;
+			case 3:
+				_targetValue = States_Us[_state]; //lowend
+				if (abs(_currentValue - _targetValue) < 3) {
+					_state = 0;
+					_prevTargetValue = _targetValue;
+					_currentValue = _targetValue;
+					}
+					break;
+		}
+	
+
+				_stepdiff = (_targetValue - _prevTargetValue) / (argRateMultiplier * _rate);
+				_currentValue = _currentValue + _stepdiff;
+
+				SetUs(_currentValue);
+	}
+					
 
 void Servo20kg::WriteNormalDegrees_convert_writeMilis(int argAngle_base180) {
 	float newAng;//based ofset 205

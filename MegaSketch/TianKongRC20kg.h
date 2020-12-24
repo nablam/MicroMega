@@ -22,11 +22,11 @@ class Servo20kg {
 
 	void WriteNormalDegrees_convert_writeMilis(int argAngle);
 	void SetUs(int argPuls);
-	void General_ServoSetAngle(int argTransversal, int argDisplacement, int argHeight);
+	void General_ServoWalkCycle( int argRateMultiplier,  int argInRate);
 		
 	void Dispatch_TestFunc_value(int argFuncIndex, int argVal);
 	int  WriteCorrectMillisFromInputangle(int argInputANG);
-	
+	void LoadStatesUs(int argus);
 	private:
 	Servo _servo;
 	float _scaleFactor270;  //input 180 degrees -> /_scalefactor720 = 120
@@ -43,12 +43,41 @@ class Servo20kg {
 	
 	bool _ANG_sv_movesCorrectly;
 
+	int _state;
+	float _inputRate;
+	float _rate;
+	int _currentValue;
+	int _targetValue;
+	int _prevTargetValue;
+	float _stepdiff = 0;
+
 	float _ANG_Corrected_whenLowVal;
 	float _ANG_Corrected_whenHighVal;
 
 	int _CurpositionUs;
 	float _curStandardizedAngle;
 	float _cur_Ang_sv;
+
+
+
+	int States_Us[4]{1300,1300,1300,1300};
+	int _i_stateUs;
+
+	//int WalkCycle0_T = 0;
+	//int WalkCycle0_D = 5;
+	//int WalkCycle0_H = 13;
+
+	//int WalkCycle1_T = 0;
+	//int WalkCycle1_D = -5;
+	//int WalkCycle1_H = 13;
+
+	//int WalkCycle2_T = 0;
+	//int WalkCycle2_D = -5;
+	//int WalkCycle2_H = 9;
+
+	//int WalkCycle3_T = 0;
+	//int WalkCycle3_D = 5;
+	//int WalkCycle3_H = 9;
 	
 	};
 

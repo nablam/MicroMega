@@ -280,4 +280,102 @@ void SetLeg(int argT, int argD, int argH, int argRevPot, int argIndexshoulder, i
 
 	}
 
- 
+
+
+
+void QuickAndDirtyLoad() {
+	int inputX = 0;
+	int inputRevY =0;
+	int inputY = 0;
+	int inputZ = 13;
+
+
+	SetupLegUS(inputX, inputY, inputZ, inputRevY, 0, 1, 2);
+	SetupLegUS(inputX, inputY, inputZ, inputRevY, 3, 4, 5);
+	SetupLegUS(inputX, inputY, inputZ, inputRevY, 6, 7, 8);
+	SetupLegUS(inputX, inputY, inputZ, inputRevY, 9, 10, 11);
+
+
+	 inputX = 0;
+	 inputRevY = -8;
+	 inputY = 8;
+	 inputZ = 13;
+
+
+
+	 SetupLegUS(inputX, inputY, inputZ, inputRevY, 0, 1, 2);
+	 SetupLegUS(inputX, inputY, inputZ, inputRevY, 3, 4, 5);
+	 SetupLegUS(inputX, inputY, inputZ, inputRevY, 6, 7, 8);
+	 SetupLegUS(inputX, inputY, inputZ, inputRevY, 9, 10, 11);
+
+
+
+	 inputX = 0;
+	 inputRevY = 0;
+	 inputY = 0;
+	 inputZ = 7;
+
+
+
+	 SetupLegUS(inputX, inputY, inputZ, inputRevY, 0, 1, 2);
+	 SetupLegUS(inputX, inputY, inputZ, inputRevY, 3, 4, 5);
+	 SetupLegUS(inputX, inputY, inputZ, inputRevY, 6, 7, 8);
+	 SetupLegUS(inputX, inputY, inputZ, inputRevY, 9, 10, 11);
+
+
+
+	 inputX = 0;
+	 inputRevY = 8;
+	 inputY = -8;
+	 inputZ = 7;
+
+
+
+	 SetupLegUS(inputX, inputY, inputZ, inputRevY, 0, 1, 2);
+	 SetupLegUS(inputX, inputY, inputZ, inputRevY, 3, 4, 5);
+	 SetupLegUS(inputX, inputY, inputZ, inputRevY, 6, 7, 8);
+	 SetupLegUS(inputX, inputY, inputZ, inputRevY, 9, 10, 11);
+
+
+
+	}
+void SetupLegUS(int argT, int argD, int argH, int argRevPot, int argIndexshoulder, int argIndexarm, int argIndexcaf) {
+
+	if (argIndexarm != 10 && argIndexarm != 7) {
+			//use Disp and HEight to get Z'
+		float Zprime = GetZprime(argH, argT);
+		float S0Angle = GetRawAngle(argT, Zprime);
+
+		float z = GetZprime(argD, Zprime);
+		float S1AnglePlus = GetRawAngle(argD, Zprime);
+		float S1Angle = getANgleSSS(ARMLEN, CALFLEN, z);
+
+		S1Angle = S1AnglePlus - S1Angle;
+		float S2Angle = getANgleSSS(CALFLEN, z, ARMLEN);
+
+		Sv20kgArra[argIndexshoulder]->LoadStatesUs(S0Angle);
+		Sv20kgArra[argIndexarm]->LoadStatesUs(S1Angle);
+		Sv20kgArra[argIndexcaf]->LoadStatesUs(S2Angle);
+		}
+
+	else
+		{
+
+			//use Disp and HEight to get Z'
+		float Zprime = GetZprime(argH, argT);
+		float S0Angle = GetRawAngle(argT, Zprime);
+
+		float z = GetZprime(argRevPot, Zprime);
+		float S1AnglePlus = GetRawAngle(argRevPot, Zprime);
+		float S1Angle = getANgleSSS(ARMLEN, CALFLEN, z);
+
+		S1Angle = S1AnglePlus - S1Angle;
+		float S2Angle = getANgleSSS(CALFLEN, z, ARMLEN);
+
+		Sv20kgArra[argIndexshoulder]->LoadStatesUs(S0Angle);
+		Sv20kgArra[argIndexarm]->LoadStatesUs(S1Angle);
+		Sv20kgArra[argIndexcaf]->LoadStatesUs(S2Angle);
+		}
+
+	}
+
