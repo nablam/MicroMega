@@ -37,7 +37,7 @@
     <ClInclude Include="TianKongRC20kg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SuperServo.h">
+    <ClInclude Include="SrevoII.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -48,7 +48,7 @@
     <ClCompile Include="TianKongRC20kg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SuperServo.cpp">
+    <ClCompile Include="SrevoII.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
