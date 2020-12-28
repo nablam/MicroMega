@@ -58,34 +58,3 @@
 //	}
 //
 //
-//void ReadInputRate_sweep_noservomove() {
-//
-//	inputRate = map(pval13_RS_rot, 0, 1000, 1, 10);// pval11_RS_uD;//
-//	rate = inputRate;
-//
-//
-//	if (state == 0) {
-//		targetValue = 1080; //lowend
-//		if (currentValue <= targetValue) {
-//			state = 1;
-//			prevTargetValue = targetValue;
-//			currentValue = targetValue;
-////Serial.println("on ");
-//			}
-//		}
-//   // else 
-//	if (state == 1)
-//		{
-//		targetValue = 1880; //highend
-//		if (currentValue >= targetValue) {
-//			state = 0;
-//			prevTargetValue = targetValue;
-//			currentValue = targetValue;
-////			   Serial.print("off");
-//			}
-//		}
-//
-//	stepdiff = (targetValue - prevTargetValue) / (28 * rate);
-//	currentValue = currentValue + stepdiff;
-//
-//	}
