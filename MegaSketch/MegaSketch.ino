@@ -12,191 +12,201 @@
 #include <Svo.h>
 
 //#define LOGMAster
-#define MillisPerLoop 10
+#define MillisPerLoop 4000
 #define MaxStepsPer1KMilli  1685
 float MaxStepsPerLoop;
-Svo s0;
-Svo s1;
+//Svo ServoOrange;
+//Svo ServoYellow;
 int baseDelayTime = 800;
 int angles[6] = { 45,90,180,270,180,90 };
 int anglesMillis[6] = { 849,1186,1860,2500,1860,1186 };
 int i_ang = 0;
 int tempangle = 90;
 int tempDelay = 2000;
-int _inputRate = 20;
-float _rate = 400.0;
+ 
 float speedrate;
 float _rateMulitplyer;
 int loopCycle = 1000;
-int _targetValue;
-int _currentValue;
-int _prevTargetValue;
-float _stepdiff;
-float servo1PosFiltered;
-int state = 0;
+ 
+  
+ 
 unsigned long currentMillis;
 unsigned long previousMillis;
 unsigned long BaseStartCountMillis;
 
 int testvalue_849_2197 = 2197;
 bool printednce = false;
+
+int Specialangles[10] = { 45,90,135,140,150,180,205,225,260,270 };
+
+String StrInputed_MegaSketch;
+int linecount_MegaSketch;
+int posA_input;
+int posB_input;
+Svo sv0;
+Svo sv1;
+Svo sv2;
+Svo sv3;
+Svo sv4;
+Svo sv5;
+Svo sv6;
+Svo sv7;
+Svo sv8;
+Svo sv9;
+Svo sv10;
+Svo sv11;
+Svo Arrasvos[12] = { sv0,sv1,sv2,sv3,sv4,sv5,sv6,sv7,sv8,sv9,sv10,sv11 };
+int tempPos = 50;
+int tempspeed = 0;
 void setup()
 	{
 	MaxStepsPerLoop = (float)(MaxStepsPer1KMilli / 1000) * MillisPerLoop;
 	Serial.begin(115200);
 	Serial.flush();
-	s0.Attach(40, false);
-	s1.Attach(38, false);
 
-	s0.InitPositions();
-	s1.InitPositions();
+	for (int x = 0; x < 12; x++) {
+		Arrasvos[x].Attach(x);
+		}
+ 
+	Serial.println("all setup");
+	 
+ 
 
-
-	Serial.print("hi=");
-	Serial.println("hoo");
-	
-	Serial.print("45d=");
-	Serial.println(s1.ConvertDegreesToPulsw(45));
-    
-	Serial.print( "45d=");
-	Serial.println(s1.ConvertDegreesToPulsw(45));
-
-	Serial.print("225d=");
-	Serial.println(s1.ConvertDegreesToPulsw(225));
-
-	Serial.print("90d=");
-	Serial.println(s1.ConvertDegreesToPulsw(90));
-
-	Serial.print("180d=");
-	Serial.println(s1.ConvertDegreesToPulsw(180));
 	
 	//2197
 	//s1.Write(225);
 	i_ang = 1;
 	randomSeed(analogRead(0));
 	int rangle = anglesMillis[i_ang]; //random(900, 2100);
-	_currentValue = _prevTargetValue=rangle;
-	s1.WriteMicroseconds(rangle);
+	 
 	Serial.println(rangle);
 	Serial.print("max steps per loop");
-	Serial.println(MaxStepsPerLoop);
 
-	delay(3000);
+
+	for (int x = 0; x < 12; x++) {
+		//Arrasvos[x].ZeroMe();
+		}
+
+
+	//Arrasvos[0].ZeroMe();
+	 
+
+	delay(50);
 }
 
+int indxx = -1;
 
 
-void DoAngle() {
-
-	/*if (currentMillis % 100 == 0){
-		if (i_ang > 5) {
-			i_ang = 0;
-			}
-
-		i_ang++;
-		}*/
-
-	/*if (currentMillis % 10 == 0) {
-		if (_rate > ratemax) {
-			_rate = rateMin;
-			}
-		else
-			if (_rate < rateMin) {
-				_rate = rateMin;
-				}
-		_rate++;
-		}*/
-		 
-	#ifdef LOGMAster
-		Serial.println(tempangle);
-	#endif
-
-		//int millispuls = s1.ConvertDegreesToPulsw(250);
-	
-
-		//int ffflllteredms = movetoAtRate_giveCurTargpos(  _rate, millispuls);
-
-	//	s1.WriteMicroseconds(ffflllteredms);
-	
-		
-
-	#ifdef LOGMAster
-		Serial.print("reading MS"); Serial.print(s1.Read());	Serial.print("reading "); Serial.println(s1.ReadMicroseconds());
-	#endif
-		//delay(tempDelay);
-		//Serial.println(_rate);
-
-		}
+//int someangles[3] = { 110,210,245 };
+int someangles[3] = { 110,110,110 };
 void loop() {
 	
 	 currentMillis = millis();
 	 if (currentMillis - previousMillis >= MillisPerLoop) {
 		 previousMillis = currentMillis;
-		// printednce = !printednce;
-		/* if (!printednce)s1.WriteMicroseconds(movetoAtRate_giveCurTargpos(2197,50));
-		 else
-			 s1.WriteMicroseconds(movetoAtRate_giveCurTargpos(225,100));*/
-		 //s1.WriteMicroseconds(movetoAtRate_giveCurTargpos(anglesMillis[i_ang+1], 10));
 
+         indxx++;
 
-		 s1.speedmove(200, 200);
-		 delay(3000);
-		 s1.speedmove(90, 20);
-		 delay(3000);
-		 }
-		 
-	}
+         if (indxx == 3)indxx = 0;
 
-void ReadInputRate_sweep_noservomove() {
-	if (state == 0) {
-		_targetValue = 1860; //lowend
-		if (_currentValue >= _targetValue) {
-			state = 1;
-			_prevTargetValue = _targetValue;
+        // Arrasvos[0].Speedmove(someangles[indxx], 40);
+        /* while (Serial.available() > 0) {
+
+             StrInputed_MegaSketch = Serial.readStringUntil('\n');
+
+             SerialInputsForA_Bloop();
+             }*/
+
+		 } 
 		
- Serial.println("on ");
-			}
-		}
-   
-	if (state == 1)
-		{
-		_targetValue = 1160; //highend
-		if (_currentValue <= _targetValue) {
-			state = 0;
-			_prevTargetValue = _targetValue;
-			
- 			   Serial.print("off");
-			}
-		}
+      Arrasvos[0].Speedmove(200, tempspeed);
+     Arrasvos[3].Speedmove(200, tempspeed);
 
-	_stepdiff = (_targetValue - _prevTargetValue) / ( _rate *   ((float) baseDelayTime /100));
-	_currentValue = _currentValue + _stepdiff;
+     Arrasvos[6].Speedmove(200, tempspeed);
+     Arrasvos[9].Speedmove(200, tempspeed); 
+      
+     Arrasvos[1].Speedmove(200, tempspeed);
+     Arrasvos[4].Speedmove(200, tempspeed);
 
+     Arrasvos[7].Speedmove(200, tempspeed);
+     Arrasvos[10].Speedmove(200, tempspeed);
+      
+     Arrasvos[2].Speedmove(someangles[indxx], tempspeed);
+     Arrasvos[5].Speedmove(someangles[indxx], tempspeed);
+
+     Arrasvos[8].Speedmove(someangles[indxx], tempspeed);
+     Arrasvos[11].Speedmove(someangles[indxx], tempspeed);
+
+   //  Serial.println(Arrasvos[8].Read());
+//
 	}
 
-bool lockserial = false;
-int movetoAtRate_giveCurTargpos(   int gotoUs, float argspeedPercentage) {
-	//100percent speed would be MaxStepsPerLoop
-	int stepsToTakeInThisLoop = abs(_currentValue - _targetValue); //prevtargetval is where we are now
 
-	_targetValue = gotoUs; 
-	if (stepsToTakeInThisLoop < 4) {
-		if (!lockserial) {
-			Serial.println("reached");
-			_prevTargetValue = _targetValue;
-			lockserial = true;
-			}
-		}
+
+
+
+void SerialInputsForA_Bloop() {
+    String part01 = getValue(StrInputed_MegaSketch, ',', 0);
+    String part02 = getValue(StrInputed_MegaSketch, ',', 1);
+    //String part03 = getValue(StrInputed,';',2);
+
+    if (part01.equalsIgnoreCase("nogo") && part02.equalsIgnoreCase("nogo")) {
+        part01 = String(200);
+        part02 = String(200);
+        }
+    else
+
+        if (part01.equalsIgnoreCase("nogo") || part02.equalsIgnoreCase("nogo")) {
+            if (part01.equalsIgnoreCase("nogo")) {
+                part01 = part02;
+                }
+            else
+                {
+                part02 = part01;
+                }
+            }
+
+    linecount_MegaSketch++;
+
+    tempPos= posA_input = part01.toInt();
+    tempPos = constrain(tempPos, 135, 270);
+
+   tempspeed= posB_input = part02.toInt();
+   tempspeed = constrain(tempspeed, 0, 255);
  
+    Serial.print(linecount_MegaSketch);
+    Serial.print("  |");
+    Serial.print("svrA= ");
+    Serial.print(posA_input);
+    Serial.print("  ");
+    Serial.print("svrB= ");
+    Serial.print(posB_input);
+    Serial.println("-- -- -- ");
 
-	_stepdiff = (_currentValue - _targetValue) / argspeedPercentage;
-	Serial.print(" _stepdif ");	Serial.println(_stepdiff);
-	_currentValue = _currentValue + _stepdiff;
-	return _currentValue;
-	}
+    //Sv20kgArra[2]->SetAngleDegrees(posA_input);
+    //posA_input= Serial.parseInt();
+    //posB_input= Serial.parseInt();
+
+    //myservo_A.writeMicroseconds(posA_input);
+    //myservo_B.writeMicroseconds(posB_input);
+    //Serial.println(myservo_A.read());
+    //Serial.println("-- ");
+    }
 
 
-float filter(float prevValue, float currentValue, int filter) {
-	float lengthFiltered = (prevValue + (currentValue * filter)) / (filter + 1);
-	return lengthFiltered;
-	}
+String getValue(String data, char separator, int index)
+    {
+    int found = 0;
+    int strIndex[] = { 0, -1 };
+    int maxIndex = data.length() - 1;
+
+    for (int i = 0; i <= maxIndex && found <= index; i++) {
+        if (data.charAt(i) == separator || i == maxIndex) {
+            found++;
+            strIndex[0] = strIndex[1] + 1;
+            strIndex[1] = (i == maxIndex) ? i + 1 : i;
+            }
+        }
+    return found > index ? data.substring(strIndex[0], strIndex[1]) : "nogo";
+    }
+
