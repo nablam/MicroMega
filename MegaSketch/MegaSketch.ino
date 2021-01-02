@@ -12,15 +12,20 @@
 #include <Svo.h>
 
 //#define LOGMAster
+#define MillisPerLoop 10
+#define MaxStepsPer1KMilli  1685
+float MaxStepsPerLoop;
 Svo s0;
 Svo s1;
-int baseDelayTime = 780;
-int angles[6] = { 25,90,180,270,180,90 };
+int baseDelayTime = 800;
+int angles[6] = { 45,90,180,270,180,90 };
+int anglesMillis[6] = { 849,1186,1860,2500,1860,1186 };
 int i_ang = 0;
 int tempangle = 90;
 int tempDelay = 2000;
 int _inputRate = 20;
 float _rate = 400.0;
+float speedrate;
 float _rateMulitplyer;
 int loopCycle = 1000;
 int _targetValue;
@@ -37,9 +42,14 @@ int testvalue_849_2197 = 2197;
 bool printednce = false;
 void setup()
 	{
+	MaxStepsPerLoop = (float)(MaxStepsPer1KMilli / 1000) * MillisPerLoop;
 	Serial.begin(115200);
+	Serial.flush();
 	s0.Attach(40, false);
 	s1.Attach(38, false);
+
+	s0.InitPositions();
+	s1.InitPositions();
 
 
 	Serial.print("hi=");
@@ -62,10 +72,16 @@ void setup()
 	
 	//2197
 	//s1.Write(225);
-	s1.WriteMicroseconds(testvalue_849_2197);
+	i_ang = 1;
+	randomSeed(analogRead(0));
+	int rangle = anglesMillis[i_ang]; //random(900, 2100);
+	_currentValue = _prevTargetValue=rangle;
+	s1.WriteMicroseconds(rangle);
+	Serial.println(rangle);
+	Serial.print("max steps per loop");
+	Serial.println(MaxStepsPerLoop);
 
-
-	delay(baseDelayTime);
+	delay(3000);
 }
 
 
@@ -112,35 +128,23 @@ void DoAngle() {
 
 		}
 void loop() {
-	//currentMillis = millis();
-	//BaseStartCountMillis = currentMillis;
-	//if (BaseStartCountMillis > (4010 + baseDelayTime )) {
-		/*if (!printednce) {
-			Serial.println("STARTED!!!");
-			printednce = true;
-			
-			}*/
-
-		/*if (currentMillis - previousMillis >= 10000) {
-			previousMillis = currentMillis;*/
-
-			//ReadInputRate_sweep_noservomove();
-			//s1.WriteMicroseconds(_currentValue);
 	
-	s1.WriteMicroseconds(2197);
-	
-	delay(baseDelayTime);
-	s1.WriteMicroseconds( 849 );
+	 currentMillis = millis();
+	 if (currentMillis - previousMillis >= MillisPerLoop) {
+		 previousMillis = currentMillis;
+		// printednce = !printednce;
+		/* if (!printednce)s1.WriteMicroseconds(movetoAtRate_giveCurTargpos(2197,50));
+		 else
+			 s1.WriteMicroseconds(movetoAtRate_giveCurTargpos(225,100));*/
+		 //s1.WriteMicroseconds(movetoAtRate_giveCurTargpos(anglesMillis[i_ang+1], 10));
 
-	delay(baseDelayTime);
-			//testvalue_849_2197 = testvalue_849_2197 -800;
-			
-			if (testvalue_849_2197 > 849 && testvalue_849_2197 < 2198)s1.WriteMicroseconds(testvalue_849_2197);
-			//testvalue_849_2197 = 849;
 
-			
-		//	}
-		//}
+		 s1.speedmove(200, 200);
+		 delay(3000);
+		 s1.speedmove(90, 20);
+		 delay(3000);
+		 }
+		 
 	}
 
 void ReadInputRate_sweep_noservomove() {
@@ -165,28 +169,29 @@ void ReadInputRate_sweep_noservomove() {
 			}
 		}
 
-	_stepdiff = (_targetValue - _prevTargetValue) / ( _rate);
+	_stepdiff = (_targetValue - _prevTargetValue) / ( _rate *   ((float) baseDelayTime /100));
 	_currentValue = _currentValue + _stepdiff;
 
 	}
 
+bool lockserial = false;
+int movetoAtRate_giveCurTargpos(   int gotoUs, float argspeedPercentage) {
+	//100percent speed would be MaxStepsPerLoop
+	int stepsToTakeInThisLoop = abs(_currentValue - _targetValue); //prevtargetval is where we are now
 
-int movetoAtRate_giveCurTargpos(   int gotoUs) {
-
-//	_inputRate = map(argInRate, 0, 1000, 1, 10);// pval11_RS_uD;//
-	//_rate = _inputRate;
-
-	_targetValue = gotoUs; //lowend
-	if (abs(_currentValue - _targetValue) < 1) {
-		Serial.println("reached");
-		_prevTargetValue = _targetValue;
-		_currentValue = _targetValue;
+	_targetValue = gotoUs; 
+	if (stepsToTakeInThisLoop < 4) {
+		if (!lockserial) {
+			Serial.println("reached");
+			_prevTargetValue = _targetValue;
+			lockserial = true;
+			}
 		}
+ 
 
-
-	_stepdiff = (_targetValue - _prevTargetValue) / ( _rate);
+	_stepdiff = (_currentValue - _targetValue) / argspeedPercentage;
+	Serial.print(" _stepdif ");	Serial.println(_stepdiff);
 	_currentValue = _currentValue + _stepdiff;
-
 	return _currentValue;
 	}
 
