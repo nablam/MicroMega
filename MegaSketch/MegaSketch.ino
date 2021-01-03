@@ -12,8 +12,11 @@
 #include <Svo.h>
 
 //#define LOGMAster
-#define MillisPerLoop 4000
+#define MillisPerLoop 2500
 #define MaxStepsPer1KMilli  1685
+
+#define ARMLEN 12
+#define CALFLEN 12
 float MaxStepsPerLoop;
 //Svo ServoOrange;
 //Svo ServoYellow;
@@ -84,21 +87,34 @@ void setup()
 
 
 	for (int x = 0; x < 12; x++) {
-		//Arrasvos[x].ZeroMe();
+		 Arrasvos[x].ZeroMe();
 		}
 
-
-	//Arrasvos[0].ZeroMe();
-	 
-
-	delay(50);
+//	delay(50);
 }
 
 int indxx = -1;
 
 
-//int someangles[3] = { 110,210,245 };
-int someangles[3] = { 110,110,110 };
+int someangles[4] = { 144,200,248 ,200 };
+
+int TestArray[15][3] = { {0,0,18},{0,2,18},{0,4,18},{0,10,18},{8,0,20},{10,0,20},{12,0,20},{0,0,17},{0,0,16},{0,0,15},{0,0,14},{0,0,13},{0,0,12},{0,4,12},{4,5,12} };
+//0.00; 0.00; 180.00
+//0.00; -16.60; 146.80
+//0.00; -23.56; 132.89
+//0.00; -28.96; 122.09
+//0.00; -33.56; 112.89
+//0.00; -37.66; 104.68
+//0.00; -41.41; 97.18
+//0.00; -44.90; 90.20
+//0.00; -48.19; 83.62
+//0.00; -51.32; 77.36
+//0.00; -54.31; 71.37
+//0.00; -57.20; 65.59
+//0.00; -60.00; 60.00
+//0.00; -39.76; 63.61
+//17.55; -33.91; 69.04
+//int someangles[3] = { 110,110,110 };
 void loop() {
 	
 	 currentMillis = millis();
@@ -107,9 +123,23 @@ void loop() {
 
          indxx++;
 
-         if (indxx == 3)indxx = 0;
+         if (indxx == 15)indxx = 0;
+		 XYZ_inputConversion(TestArray[indxx][0], TestArray[indxx][1], TestArray[indxx][2]);
 
-        // Arrasvos[0].Speedmove(someangles[indxx], 40);
+       for (int x = 0; x < 12; x++) {
+             Arrasvos[x].ZeroMe();
+             }
+       // Arrasvos[1].Speedmove(someangles[indxx], 30);
+
+       // Arrasvos[4].Speedmove(someangles[indxx], 30 );
+      // Arrasvos[7].Speedmove(someangles[indxx], 30);
+      //  Arrasvos[10].Speedmove(someangles[indxx], 30);
+
+        // Serial.print(" "); Serial.println(Arrasvos[2]._GlobalZeroAngle);
+        //Arrasvos[4].Speedmove(someangles[indxx], 40);
+        //Arrasvos[1].Speedmove(someangles[indxx], 40);
+        //Arrasvos[7].Speedmove(someangles[indxx], 40);
+        //Arrasvos[10].Speedmove(someangles[indxx], 40);
         /* while (Serial.available() > 0) {
 
              StrInputed_MegaSketch = Serial.readStringUntil('\n');
@@ -117,96 +147,10 @@ void loop() {
              SerialInputsForA_Bloop();
              }*/
 
+      
 		 } 
-		
-      Arrasvos[0].Speedmove(200, tempspeed);
-     Arrasvos[3].Speedmove(200, tempspeed);
-
-     Arrasvos[6].Speedmove(200, tempspeed);
-     Arrasvos[9].Speedmove(200, tempspeed); 
-      
-     Arrasvos[1].Speedmove(200, tempspeed);
-     Arrasvos[4].Speedmove(200, tempspeed);
-
-     Arrasvos[7].Speedmove(200, tempspeed);
-     Arrasvos[10].Speedmove(200, tempspeed);
-      
-     Arrasvos[2].Speedmove(someangles[indxx], tempspeed);
-     Arrasvos[5].Speedmove(someangles[indxx], tempspeed);
-
-     Arrasvos[8].Speedmove(someangles[indxx], tempspeed);
-     Arrasvos[11].Speedmove(someangles[indxx], tempspeed);
-
-   //  Serial.println(Arrasvos[8].Read());
-//
+ 
 	}
 
 
-
-
-
-void SerialInputsForA_Bloop() {
-    String part01 = getValue(StrInputed_MegaSketch, ',', 0);
-    String part02 = getValue(StrInputed_MegaSketch, ',', 1);
-    //String part03 = getValue(StrInputed,';',2);
-
-    if (part01.equalsIgnoreCase("nogo") && part02.equalsIgnoreCase("nogo")) {
-        part01 = String(200);
-        part02 = String(200);
-        }
-    else
-
-        if (part01.equalsIgnoreCase("nogo") || part02.equalsIgnoreCase("nogo")) {
-            if (part01.equalsIgnoreCase("nogo")) {
-                part01 = part02;
-                }
-            else
-                {
-                part02 = part01;
-                }
-            }
-
-    linecount_MegaSketch++;
-
-    tempPos= posA_input = part01.toInt();
-    tempPos = constrain(tempPos, 135, 270);
-
-   tempspeed= posB_input = part02.toInt();
-   tempspeed = constrain(tempspeed, 0, 255);
- 
-    Serial.print(linecount_MegaSketch);
-    Serial.print("  |");
-    Serial.print("svrA= ");
-    Serial.print(posA_input);
-    Serial.print("  ");
-    Serial.print("svrB= ");
-    Serial.print(posB_input);
-    Serial.println("-- -- -- ");
-
-    //Sv20kgArra[2]->SetAngleDegrees(posA_input);
-    //posA_input= Serial.parseInt();
-    //posB_input= Serial.parseInt();
-
-    //myservo_A.writeMicroseconds(posA_input);
-    //myservo_B.writeMicroseconds(posB_input);
-    //Serial.println(myservo_A.read());
-    //Serial.println("-- ");
-    }
-
-
-String getValue(String data, char separator, int index)
-    {
-    int found = 0;
-    int strIndex[] = { 0, -1 };
-    int maxIndex = data.length() - 1;
-
-    for (int i = 0; i <= maxIndex && found <= index; i++) {
-        if (data.charAt(i) == separator || i == maxIndex) {
-            found++;
-            strIndex[0] = strIndex[1] + 1;
-            strIndex[1] = (i == maxIndex) ? i + 1 : i;
-            }
-        }
-    return found > index ? data.substring(strIndex[0], strIndex[1]) : "nogo";
-    }
 
